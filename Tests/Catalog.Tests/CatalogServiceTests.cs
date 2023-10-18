@@ -43,7 +43,7 @@ namespace Carting.Tests
         }
 
         [Fact]
-        public async void RemoveCategoryAsync_PassId_ShouldGetCategory()
+        public async void RemoveCategoryAsync_PassId_ShouldRemoveCategory()
         {
             var dto = new DTOs.Category
             {
