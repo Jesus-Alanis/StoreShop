@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Carting.Domain.Entities
+﻿namespace Carting.Domain.Entities
 {
     public class Cart
     {

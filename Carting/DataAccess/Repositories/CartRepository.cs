@@ -4,15 +4,14 @@ using LiteDB;
 
 namespace Carting.DataAccess.Repositories
 {
-    public class CartRepository : ICartRepository
+    internal class CartRepository : ICartRepository
     {
-        private bool _isDisposed;
+        private bool _disposedValue;
         private ILiteDatabase _database;
         private readonly ILiteCollection<Item> _collection;
 
         public CartRepository(string connectionString)
         {
-            _isDisposed = false;
             _database = new LiteDatabase(connectionString);
             _collection = _database.GetCollection<Item>("cart_items");
         }
@@ -52,14 +51,14 @@ namespace Carting.DataAccess.Repositories
 
         protected void Dispose(bool disposing)
         {
-            if (!_isDisposed)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                     _database.Dispose();
                     _database = null;
                 }
-                _isDisposed = true;
+                _disposedValue = true;
             }
         }
     }

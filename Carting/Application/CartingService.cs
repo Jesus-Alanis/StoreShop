@@ -3,7 +3,7 @@ using Carting.Domain.Repositories;
 
 namespace Carting.Application
 {
-    public class CartingService
+    internal class CartingService
     {
         private readonly ICartRepository _cartRepository;
 
@@ -32,7 +32,5 @@ namespace Carting.Application
 
             _cartRepository.RemoveCartItem(itemId);
         }
-
-
     }
 }
