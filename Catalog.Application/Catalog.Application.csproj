@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Catalog.Tests" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Catalog.DataAccess\Catalog.DataAccess.csproj" />
     <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />

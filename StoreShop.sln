@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA9A887D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carting.Tests", "Carting.Tests\Carting.Tests.csproj", "{0D26089E-7134-48B2-9A94-215CCA8AC2B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Tests", "Tests\Catalog.Tests\Catalog.Tests.csproj", "{8C154883-2F07-4C72-91CF-9D1B1286C443}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +43,17 @@ Global
 		{0D26089E-7134-48B2-9A94-215CCA8AC2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D26089E-7134-48B2-9A94-215CCA8AC2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D26089E-7134-48B2-9A94-215CCA8AC2B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0D26089E-7134-48B2-9A94-215CCA8AC2B2} = {DA9A887D-F52A-4846-8D4B-431F0FED38B4}
+		{8C154883-2F07-4C72-91CF-9D1B1286C443} = {DA9A887D-F52A-4846-8D4B-431F0FED38B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16500F1C-22ED-43AA-B333-CE5CC270C572}

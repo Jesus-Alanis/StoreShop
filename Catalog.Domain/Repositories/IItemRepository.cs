@@ -2,7 +2,7 @@
 
 namespace Catalog.Domain.Repositories
 {
-    public interface IItemRepository
+    public interface IItemRepository : IDisposable
     {
         Task<Item> GetItemAsync(long id);
         Task<List<Item>> GetItemsAsync();
