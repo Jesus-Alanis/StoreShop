@@ -6,7 +6,7 @@ namespace Catalog.Domain.Repositories
     {
         Task<Item> GetItemAsync(long id);
         Task<List<Item>> GetItemsAsync();
-        Task AddItemAsync(Item item);
+        Task<long> AddItemAsync(Item item);
         Task UpdateItemAsync(Item item);
         Task RemoveItemAsync(Item item);
     }

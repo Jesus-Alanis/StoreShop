@@ -6,7 +6,7 @@ namespace Catalog.Domain.Repositories
     {
         Task<Category> GetCategoryAsync(long id);
         Task<List<Category>> GetCategoriesAsync();
-        Task AddCategoryAsync(Category category);
+        Task<long> AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);
         Task RemoveCategoryAsync(Category category);
     }

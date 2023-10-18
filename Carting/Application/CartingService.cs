@@ -3,7 +3,7 @@ using Carting.Domain.Repositories;
 
 namespace Carting.Application
 {
-    internal class CartingService
+    internal class CartingService : ICartingService
     {
         private readonly ICartRepository _cartRepository;
 
@@ -14,23 +14,23 @@ namespace Carting.Application
 
         public List<Item> GetItems(long cartId)
         {
-            return _cartRepository.GetCartItems(cartId);
+            return _cartRepository.GetItems(cartId);
         }
 
-        public void AddItem(Item item)
+        public long AddItem(Item item)
         {
             if (_cartRepository.Exists(item.Id))
-                return;
+                throw new Exception("Item Duplicated.");
 
-            _cartRepository.AddCartItem(item);
+            return _cartRepository.Addtem(item);
         }
 
-        public void RemoveItem(long itemId)
+        public bool RemoveItem(long itemId)
         {
             if (!_cartRepository.Exists(itemId))
-                return;
+                throw new Exception("Item Not Found.");
 
-            _cartRepository.RemoveCartItem(itemId);
+            return _cartRepository.RemoveItem(itemId);
         }
     }
 }

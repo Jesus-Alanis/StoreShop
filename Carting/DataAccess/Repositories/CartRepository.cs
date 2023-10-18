@@ -16,21 +16,23 @@ namespace Carting.DataAccess.Repositories
             _collection = _database.GetCollection<Item>("cart_items");
         }
 
-        public List<Item> GetCartItems(long cartId)
+        public List<Item> GetItems(long cartId)
         {
             return _collection.Query().Where(item => item.CartId == cartId).ToList();
         }
 
-        public void AddCartItem(Item item)
+        public long Addtem(Item item)
         {
             var id = _collection.Insert(item);
             _collection.EnsureIndex(i => i.CartId);
             _collection.EnsureIndex(i => i.Id);
+
+            return id.AsInt64;
         }
 
-        public void RemoveCartItem(long itemId)
+        public bool RemoveItem(long itemId)
         {
-            _collection.Delete(itemId);
+            return _collection.Delete(itemId);
         }
 
         public bool Exists(long itemId)

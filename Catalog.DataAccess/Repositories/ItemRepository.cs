@@ -14,10 +14,12 @@ namespace Catalog.DataAccess.Repositories
             _database = database;
         }
 
-        public async Task AddItemAsync(Item item)
+        public async Task<long> AddItemAsync(Item item)
         {
             _database.Items.Add(item);
             await _database.SaveChangesAsync();
+
+            return item.Id;
         }
 
         public async Task<Item> GetItemAsync(long id)

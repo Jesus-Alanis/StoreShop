@@ -14,10 +14,12 @@ namespace Catalog.DataAccess.Repositories
             _database = database;
         }
 
-        public async Task AddCategoryAsync(Category category)
+        public async Task<long> AddCategoryAsync(Category category)
         {
             _database.Categories.Add(category);
             await _database.SaveChangesAsync();
+
+            return category.Id;
         }
 
         public async Task<List<Category>> GetCategoriesAsync()

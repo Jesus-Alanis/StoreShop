@@ -4,9 +4,9 @@ namespace Carting.Domain.Repositories
 {
     public interface ICartRepository : IDisposable
     {
-        List<Item> GetCartItems(long cartId);
-        void AddCartItem(Item item);
-        void RemoveCartItem(long itemId);
+        List<Item> GetItems(long cartId);
+        long Addtem(Item item);
+        bool RemoveItem(long itemId);
         bool Exists(long itemId);
 
     }

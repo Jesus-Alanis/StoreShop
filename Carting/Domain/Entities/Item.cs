@@ -11,13 +11,13 @@ namespace Carting.Domain.Entities
         public double Price { get; set; }
         public short Quantity { get; set; }
 
-        public Item(long id, long cartId, string name, double price)
+        public Item(long id, long cartId, string name, double price, short quantity)
         {
             Id = id;
             CartId = cartId;
             Name = name;
             Price = price;
-            Quantity = 1;
+            Quantity = quantity;
         }
     }
 }

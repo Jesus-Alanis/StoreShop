@@ -25,9 +25,9 @@ namespace Catalog.Application
             return await _categoryRepository.GetCategoryAsync(id);
         }
 
-        public async Task AddCategoryAsync(DTOs.Category categoryDto)
+        public async Task<long> AddCategoryAsync(DTOs.Category categoryDto)
         {
-            await _categoryRepository.AddCategoryAsync(categoryDto.ToEntity());
+            return await _categoryRepository.AddCategoryAsync(categoryDto.ToEntity());
         }        
 
         public async Task UpdateCategoryAsync(long categoryId, DTOs.Category categoryDto)
@@ -61,9 +61,9 @@ namespace Catalog.Application
             return await _itemRepository.GetItemAsync(id);
         }
 
-        public async Task AddItemAsync(DTOs.Item itemDto)
+        public async Task<long> AddItemAsync(DTOs.Item itemDto)
         {
-            await _itemRepository.AddItemAsync(itemDto.ToEntity());
+            return await _itemRepository.AddItemAsync(itemDto.ToEntity());
         }
 
         public async Task UpdateItemAsync(long itemId, DTOs.Item itemDto)

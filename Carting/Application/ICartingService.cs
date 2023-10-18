@@ -2,10 +2,10 @@
 
 namespace Carting.Application
 {
-    public interface ICartService
+    public interface ICartingService
     {
         List<Item> GetItems(long cartId);
-        void AddItem(Item item);
-        void RemoveItem(long itemId);
+        long AddItem(Item item);
+        bool RemoveItem(long itemId);
     }
 }
