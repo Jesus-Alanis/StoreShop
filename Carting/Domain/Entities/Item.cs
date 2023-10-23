@@ -7,7 +7,7 @@ namespace Carting.Domain.Entities
         public long Id { get; set; }
         public long CartId { get; set; }
         public string Name { get; set; }
-        public Image Image { get; set; }
+        public Image? Image { get; set; }
         public double Price { get; set; }
         public short Quantity { get; set; }
 

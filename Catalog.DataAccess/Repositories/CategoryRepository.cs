@@ -6,8 +6,7 @@ namespace Catalog.DataAccess.Repositories
 {
     internal class CategoryRepository : ICategoryRepository
     {
-        private CatalogDbContext _database;
-        private bool _disposedValue;
+        private CatalogDbContext? _database;
 
         public CategoryRepository(CatalogDbContext database)
         {
@@ -16,6 +15,9 @@ namespace Catalog.DataAccess.Repositories
 
         public async Task<long> AddCategoryAsync(Category category)
         {
+            if (_database is null)
+                return 0;
+
             _database.Categories.Add(category);
             await _database.SaveChangesAsync();
 
@@ -24,22 +26,34 @@ namespace Catalog.DataAccess.Repositories
 
         public async Task<List<Category>> GetCategoriesAsync()
         {
+            if (_database is null)
+                return Enumerable.Empty<Category>().ToList();
+
             return await _database.Categories.ToListAsync();
         }
 
-        public async Task<Category> GetCategoryAsync(long id)
+        public async Task<Category?> GetCategoryAsync(long id)
         {
+            if (_database is null)
+                return null;
+            
             return await _database.Categories.FindAsync(id);
         }
 
         public async Task RemoveCategoryAsync(Category category)
         {
+            if (_database is null)
+                return;
+
             _database.Categories.Remove(category);
             await _database.SaveChangesAsync();
         }
 
         public async Task UpdateCategoryAsync(Category category)
         {
+            if (_database is null)
+                return;
+
             _database.Categories.Update(category);
             await _database.SaveChangesAsync();
         }
@@ -57,14 +71,10 @@ namespace Catalog.DataAccess.Repositories
 
         protected void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _database.Dispose();
-                    _database = null;
-                }
-                _disposedValue = true;
+                var db = Interlocked.Exchange(ref _database, null);
+                db?.Dispose();
             }
         }
     }

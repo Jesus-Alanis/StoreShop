@@ -6,8 +6,7 @@ namespace Carting.DataAccess.Repositories
 {
     internal class CartRepository : ICartRepository
     {
-        private bool _disposedValue;
-        private ILiteDatabase _database;
+        private ILiteDatabase? _database;
         private readonly ILiteCollection<Item> _collection;
 
         public CartRepository(string connectionString)
@@ -53,14 +52,10 @@ namespace Carting.DataAccess.Repositories
 
         protected void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _database.Dispose();
-                    _database = null;
-                }
-                _disposedValue = true;
+                var db = Interlocked.Exchange(ref _database, null);
+                db?.Dispose();
             }
         }
     }

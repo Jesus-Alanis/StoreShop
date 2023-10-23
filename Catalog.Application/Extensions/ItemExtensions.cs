@@ -7,7 +7,7 @@ namespace Catalog.Application.Extensions
     {
         public static Item ToEntity(this DTOs.Item dto)
         {
-            return new Item(dto.Name, dto.CategoryId, dto.Price, dto.Amount)
+            return new Item(dto.Name ?? string.Empty, dto.CategoryId, dto.Price, dto.Amount)
             {
                 Description = dto.Description,
                 Url = dto.Url

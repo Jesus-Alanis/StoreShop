@@ -8,7 +8,7 @@ namespace Catalog.Application.Extensions
     {
         public static Category ToEntity(this DTOs.Category dto)
         {
-            return new Category(dto.Name)
+            return new Category(dto.Name ?? string.Empty)
             {                
                 Url = dto.Url,
                 ParentCategoryId = dto.ParentCategoryId

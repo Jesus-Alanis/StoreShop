@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<WarningsAsErrors>CS8601,CS8602,CS8604,CS8618,CS8625,CS8629</WarningsAsErrors>
+	</PropertyGroup>
+
 </Project>
