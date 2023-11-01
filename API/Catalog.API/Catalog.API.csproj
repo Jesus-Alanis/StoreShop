@@ -4,7 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>78b6fee9-a2ee-4c83-9727-904b657b578a</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.2" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Catalog.Application\Catalog.Application.csproj" />

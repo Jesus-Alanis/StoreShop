@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Catalog.Application\Catalog.Application.csproj" />
     <ProjectReference Include="..\Catalog.DataAccess\Catalog.DataAccess.csproj" />
     <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
+    <ProjectReference Include="..\Catalog.Infra.ExternalServices\Catalog.Infra.ExternalServices.csproj" />
   </ItemGroup>
 
 </Project>

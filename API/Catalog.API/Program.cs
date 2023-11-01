@@ -2,8 +2,7 @@ using StoreShop.Infra;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DependencyContainer.RegisterDatabase(builder.Services, builder.Configuration);
-DependencyContainer.RegisterServices(builder.Services);
+DependencyContainer.RegisterServices(builder.Services, builder.Configuration);
 
 builder.Services.AddControllers();
 

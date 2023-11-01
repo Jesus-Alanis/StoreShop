@@ -22,26 +22,26 @@ namespace Carting.DataAccess.Repositories
 
         public Item GetItem(string cartId, long itemId)
         {
-            return _collection.FindOne(item => item.CartId == cartId && item.Id == itemId);
+            return _collection.FindOne(item => item.CartId == cartId && item.ItemId == itemId);
         }
 
         public long Addtem(Item item)
         {
-            var id = _collection.Insert(item).AsInt64;
+            var cartItemId = _collection.Insert(item).AsInt64;
             _collection.EnsureIndex(i => i.CartId);
-            _collection.EnsureIndex(i => i.Id);
+            _collection.EnsureIndex(i => i.ItemId);
 
-            return id;
+            return cartItemId;
         }
 
-        public bool RemoveItem(long itemId)
+        public bool RemoveItem(long cartItemId)
         {
-            return _collection.Delete(itemId);
+            return _collection.Delete(cartItemId);
         }
 
         public bool Exists(string cartId, long itemId)
         {
-            return _collection.Exists(item => item.CartId == cartId && item.Id == itemId);
+            return _collection.Exists(item => item.CartId == cartId && item.ItemId == itemId);
         }
 
         ~CartRepository()

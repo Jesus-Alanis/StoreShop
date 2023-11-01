@@ -1,16 +1,21 @@
 ﻿using Catalog.Application;
+using Catalog.Domain.ExternalServices;
+using Moq;
 using DTOs = Catalog.Application.DTOs;
-using Catalog.Domain.Entities;
 
 namespace Carting.Tests
 {
     public class CatalogServiceTests : IClassFixture<DatabaseFixture>
     {
         private readonly ICatalogService _catalogService;
+        private readonly Mock<IMessageBroker> _messageBroker;
 
         public CatalogServiceTests(DatabaseFixture fixture)
         {
-            _catalogService = new CatalogService(fixture.CategoryRepository, fixture.ItemRepository);
+            _messageBroker = new Mock<IMessageBroker>();
+            _messageBroker.Setup(s => s.PublishMessageAsync(It.IsAny<object>()));
+
+            _catalogService = new CatalogService(fixture.CategoryRepository, fixture.ItemRepository, _messageBroker.Object);
         }
 
         [Fact]

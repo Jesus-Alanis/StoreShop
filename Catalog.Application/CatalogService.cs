@@ -1,5 +1,6 @@
 ﻿using Catalog.Application.Extensions;
 using Catalog.Domain.Entities;
+using Catalog.Domain.ExternalServices;
 using Catalog.Domain.Repositories;
 
 namespace Catalog.Application
@@ -8,11 +9,13 @@ namespace Catalog.Application
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IMessageBroker _messageBroker;
 
-        public CatalogService(ICategoryRepository categoryRepository, IItemRepository itemRepository)
+        public CatalogService(ICategoryRepository categoryRepository, IItemRepository itemRepository, IMessageBroker messageBroker)
         {
             _categoryRepository = categoryRepository;
             _itemRepository = itemRepository;
+            _messageBroker = messageBroker;
         }
 
         public async Task<List<Category>> GetCategoriesAsync()
@@ -75,6 +78,7 @@ namespace Catalog.Application
             itemDto.MapEntity(item);
 
             await _itemRepository.UpdateItemAsync(item);
+            await _messageBroker.PublishMessageAsync(item);
         }
 
         public async Task RemoveItemAsync(long itemId)
