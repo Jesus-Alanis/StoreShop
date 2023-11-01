@@ -19,7 +19,7 @@ namespace Carting.API.Controllers.v2
 
         [HttpGet("{cartId}")]
         [MapToApiVersion("2.0")]
-        [ProducesResponseType(typeof(IEnumerable<Item>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Item>), StatusCodes.Status200OK)]
         public IResult GetCart(string cartId)
         {
             var items = _cartingService.GetCart(cartId);
