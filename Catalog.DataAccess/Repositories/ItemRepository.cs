@@ -32,12 +32,15 @@ namespace Catalog.DataAccess.Repositories
             return await _database.Items.FindAsync(id);
         }
 
-        public async Task<List<Item>> GetItemsAsync()
+        public async Task<List<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex = 1)
         {
             if (_database is null)
                 return Enumerable.Empty<Item>().ToList();
 
-            return await _database.Items.ToListAsync();
+            return await _database.Items.Where(item => item.CategoryId == categoryId)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task RemoveItemAsync(Item item)

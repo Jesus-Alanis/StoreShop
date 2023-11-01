@@ -52,7 +52,7 @@ namespace Carting.Tests
             };
 
             var id = await _catalogService.AddCategoryAsync(dto);
-            await _catalogService.RemoveCategoryAsync(id);
+            await _catalogService.RemoveCategoryAndItemsAsync(id);
             var category = await _catalogService.GetCategoryAsync(id);
 
             Assert.Null(category);

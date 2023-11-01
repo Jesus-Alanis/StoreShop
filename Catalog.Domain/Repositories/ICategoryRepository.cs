@@ -8,6 +8,6 @@ namespace Catalog.Domain.Repositories
         Task<List<Category>> GetCategoriesAsync();
         Task<long> AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);
-        Task RemoveCategoryAsync(Category category);
+        Task RemoveCategoryAndItemsAsync(Category category);
     }
 }

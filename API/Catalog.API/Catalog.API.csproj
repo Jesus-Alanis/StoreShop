@@ -9,7 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Catalog.Application\Catalog.Application.csproj" />
     <ProjectReference Include="..\..\Catalog.Domain\Catalog.Domain.csproj" />
-    <ProjectReference Include="..\..\StoreShop.Infra.IoC\StoreShop.Infra.IoC.csproj" />
+    <ProjectReference Include="..\..\Catalog.Infra.IoC\Catalog.Infra.IoC.csproj" />
   </ItemGroup>
 
 </Project>

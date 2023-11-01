@@ -16,12 +16,12 @@ namespace Catalog.API.Controllers
             _catalogService = catalogService;
         }
 
-        [HttpGet]
+        [HttpGet("{categoryId}")]
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Item>), StatusCodes.Status200OK)]
-        public async Task<IResult> GetCategories()
+        public async Task<IResult> GetItems(long categoryId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
         {
-            var items = await _catalogService.GetItemsAsync().ConfigureAwait(false);
-            return Results.Ok(items.Select(c => c.ToDto()).AsEnumerable());
+            var items = await _catalogService.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex).ConfigureAwait(false);
+            return Results.Ok(items.Select(c => c.ToDto()));
         }
 
         [HttpGet("{id}")]
