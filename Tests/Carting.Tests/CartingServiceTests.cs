@@ -1,5 +1,6 @@
 ﻿using Carting.Application;
 using Carting.Domain.Entities;
+using Carting.Domain.Exceptions;
 
 namespace Carting.Tests
 {
@@ -16,12 +17,12 @@ namespace Carting.Tests
         [Fact]
         public void AddCartItem_PassItem_ShouldSaveItem()
         {         
-            var item = new Item(id: 1, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var id = _cartingService.AddItem(item);
+            var id = _cartingService.AddItem(cartId: Guid.NewGuid().ToString(), item);
 
             Assert.True(id > 0);
         }        
@@ -29,13 +30,15 @@ namespace Carting.Tests
         [Fact]
         public void RemoveCartItem_PassId_ShouldRemoveItem()
         {
-            var item = new Item(id: 2, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var id = _cartingService.AddItem(item);
-            var isDeleted = _cartingService.RemoveItem(id);
+            var cartId = Guid.NewGuid().ToString();
+
+            var id = _cartingService.AddItem(cartId, item);
+            var isDeleted = _cartingService.RemoveItem(cartId, id);
 
             Assert.True(isDeleted);
         }
@@ -43,47 +46,36 @@ namespace Carting.Tests
         [Fact]
         public void GetCartItems_PassCartId2_ShouldGet2items()
         {
-            var item1 = new Item(id: 3, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item1 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var item2 = new Item(id: 4, cartId: 2, name: "Lightbulb", price: 1.25, quantity: 1)
+            var cart2Id = Guid.NewGuid().ToString();
+
+            var item2 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var item3 = new Item(id: 5, cartId: 2, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item3 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            _ =  _cartingService.AddItem(item1);
-            _ =  _cartingService.AddItem(item2);
-            _ = _cartingService.AddItem(item3);
+            _ =  _cartingService.AddItem(cartId: Guid.NewGuid().ToString(), item1);
+            _ =  _cartingService.AddItem(cartId: cart2Id, item2);
+            _ = _cartingService.AddItem(cartId: cart2Id, item3);
 
-            var items = _cartingService.GetItems(cartId: 2);
+            var cart = _cartingService.GetCart(cartId: cart2Id);
 
-            Assert.Equal(2, items.Count);
-        }
-
-        [Fact]
-        public void AddCartItem_PassDuplicatedItem_ShouldThrowException()
-        {
-            var item = new Item(id: 6, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
-            {
-                Image = new Domain.ValueObjects.Image("https://some.domain.com")
-            };
-
-            _ = _cartingService.AddItem(item);
-
-            Assert.Throws<Exception>(() => _cartingService.AddItem(item));
+            Assert.Equal(2, cart.Items.Count());
         }
 
         [Fact]
         public void RemoveCartItem_PassInvalidId_ShouldThrowException()
         {
-            Assert.Throws<Exception>(() => _cartingService.RemoveItem(itemId: 7));
+            Assert.Throws<ItemNotFoundException>(() => _cartingService.RemoveItem(cartId: Guid.NewGuid().ToString(), itemId: 7));
         }
     }
 }

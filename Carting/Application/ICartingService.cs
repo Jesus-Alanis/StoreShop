@@ -4,8 +4,9 @@ namespace Carting.Application
 {
     public interface ICartingService
     {
-        List<Item> GetItems(long cartId);
-        long AddItem(Item item);
-        bool RemoveItem(long itemId);
+        DTOs.Cart GetCart(string cartId);
+        DTOs.Item GetItem(string cartId, long itemId);
+        long AddItem(string cartId, DTOs.Item item);
+        bool RemoveItem(string cartId, long itemId);
     }
 }

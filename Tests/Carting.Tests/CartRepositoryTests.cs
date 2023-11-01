@@ -15,8 +15,9 @@ namespace Carting.Tests
         [Fact]
         public void AddCartItem_PassItem_ShouldSaveItem()
         {
-            var item = new Item(id: 1, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1) 
+            var item = new Item(cartId: Guid.NewGuid().ToString(), name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 1,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
@@ -28,8 +29,9 @@ namespace Carting.Tests
         [Fact]
         public void RemoveCartItem_PassId_ShouldRemoveItem()
         {
-            var item = new Item(id: 2, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item = new Item(cartId: Guid.NewGuid().ToString(), name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 2,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
@@ -42,18 +44,23 @@ namespace Carting.Tests
         [Fact]
         public void GetCartItems_PassCartId2_ShouldGet2items()
         {
-            var item1 = new Item(id: 3, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item1 = new Item(cartId: Guid.NewGuid().ToString(), name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 3,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var item2 = new Item(id: 4, cartId: 2, name: "Lightbulb", price: 1.25, quantity: 1)
+            var cart2Id = Guid.NewGuid().ToString();
+
+            var item2 = new Item(cartId: cart2Id, name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 4,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var item3 = new Item(id: 5, cartId: 2, name: "Lightbulb", price: 1.25, quantity: 1)
+            var item3 = new Item(cartId: cart2Id, name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 5,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
@@ -61,7 +68,7 @@ namespace Carting.Tests
             _ = _fixture.CartRepository.Addtem(item2);
             _ = _fixture.CartRepository.Addtem(item3);
 
-            var items = _fixture.CartRepository.GetItems(cartId: 2);
+            var items = _fixture.CartRepository.GetItems(cartId: cart2Id);
 
             Assert.Equal(2, items.Count);
         }
@@ -69,13 +76,16 @@ namespace Carting.Tests
         [Fact]
         public void Exists_PassId_ShouldFindItem()
         {
-            var item = new Item(id: 6, cartId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
+            var cartId = Guid.NewGuid().ToString();
+
+            var item = new Item(cartId: cartId, name: "Lightbulb", price: 1.25, quantity: 1)
             {
+                Id = 6,
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var id = _fixture.CartRepository.Addtem(item);
-            var isFound = _fixture.CartRepository.Exists(id);
+            var itemId = _fixture.CartRepository.Addtem(item);
+            var isFound = _fixture.CartRepository.Exists(cartId, itemId);
 
             Assert.True(isFound);
         }

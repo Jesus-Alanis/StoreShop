@@ -6,17 +6,17 @@ using System.Net.Mime;
 namespace Catalog.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ItemsController : ControllerBase
+    [Route("api/items")]
+    public class ItemController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
 
-        public ItemsController(ICatalogService catalogService)
+        public ItemController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
 
-        [HttpGet("{categoryId}")]
+        [HttpGet("categories/{categoryId}")]
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Item>), StatusCodes.Status200OK)]
         public async Task<IResult> GetItems(long categoryId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
         {
@@ -24,11 +24,11 @@ namespace Catalog.API.Controllers
             return Results.Ok(items.Select(c => c.ToDto()));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{itemId}")]
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status200OK)]
-        public async Task<IResult> GetItem(long id)
+        public async Task<IResult> GetItem(long itemId)
         {
-            var item = await _catalogService.GetItemAsync(id).ConfigureAwait(false);
+            var item = await _catalogService.GetItemAsync(itemId).ConfigureAwait(false);
             return Results.Ok(item.ToDto());
         }
 
@@ -38,24 +38,24 @@ namespace Catalog.API.Controllers
         public async Task<IResult> CreateItem(Application.DTOs.Item dto)
         {
             var itemId = await _catalogService.AddItemAsync(dto).ConfigureAwait(false);
-            var location = Url.Action(nameof(GetItem), new { id = itemId }) ?? $"/{itemId}";
+            var location = Url.Action(nameof(GetItem), new { itemId }) ?? $"/{itemId}";
             return Results.Created(location, dto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{itemId}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IResult> UpdateItem(long id, [FromBody] Application.DTOs.Item dto)
+        public async Task<IResult> UpdateItem(long itemId, [FromBody] Application.DTOs.Item dto)
         {
-            await _catalogService.UpdateItemAsync(id, dto).ConfigureAwait(false);
+            await _catalogService.UpdateItemAsync(itemId, dto).ConfigureAwait(false);
             return Results.Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{itemId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IResult> DeleteItem(long id)
+        public async Task<IResult> DeleteItem(long itemId)
         {
-            await _catalogService.RemoveItemAsync(id).ConfigureAwait(false);
+            await _catalogService.RemoveItemAsync(itemId).ConfigureAwait(false);
             return Results.Ok();
         }
     }

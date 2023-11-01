@@ -4,10 +4,11 @@ namespace Carting.Domain.Repositories
 {
     public interface ICartRepository : IDisposable
     {
-        List<Item> GetItems(long cartId);
+        List<Item> GetItems(string cartId);
+        Item GetItem(string cartId, long itemId);
         long Addtem(Item item);
         bool RemoveItem(long itemId);
-        bool Exists(long itemId);
+        bool Exists(string cartId, long itemId);
 
     }
 }

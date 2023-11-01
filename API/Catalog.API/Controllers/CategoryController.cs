@@ -7,12 +7,12 @@ namespace Catalog.API.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
-    public class CategoriesController : ControllerBase
+    [Route("api/categories")]
+    public class CategoryController : ControllerBase
     {
         private readonly ICatalogService _catalogService;
 
-        public CategoriesController(ICatalogService catalogService)
+        public CategoryController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
@@ -39,7 +39,7 @@ namespace Catalog.API.Controllers
         public async Task<IResult> CreateCategory(Application.DTOs.Category dto)
         {
             var categoryId = await _catalogService.AddCategoryAsync(dto).ConfigureAwait(false);
-            var location = Url.Action(nameof(GetCategory), new { id = categoryId }) ?? $"/{categoryId}";
+            var location = Url.Action(nameof(GetCategory), new { categoryId }) ?? $"/{categoryId}";
             return Results.Created(location, dto);
         }
 

@@ -1,4 +1,5 @@
-﻿using Carting.Domain.Entities;
+﻿using Carting.Application.Extentions;
+using Carting.Domain.Exceptions;
 using Carting.Domain.Repositories;
 
 namespace Carting.Application
@@ -12,23 +13,28 @@ namespace Carting.Application
             _cartRepository = cartRepository;
         }
 
-        public List<Item> GetItems(long cartId)
+        public DTOs.Cart GetCart(string cartId)
         {
-            return _cartRepository.GetItems(cartId);
+            var items = _cartRepository.GetItems(cartId);
+            return new DTOs.Cart(cartId, items.Select(i => i.ToDto()));
         }
 
-        public long AddItem(Item item)
+        public DTOs.Item GetItem(string cartId, long itemId)
         {
-            if (_cartRepository.Exists(item.Id))
-                throw new Exception("Item Duplicated.");
+            var item = _cartRepository.GetItem(cartId, itemId);
+            return item.ToDto();
+        }
 
+        public long AddItem(string cartId, DTOs.Item dto)
+        {
+            var item = dto.ToEntity(cartId);
             return _cartRepository.Addtem(item);
         }
 
-        public bool RemoveItem(long itemId)
+        public bool RemoveItem(string cartId, long itemId)
         {
-            if (!_cartRepository.Exists(itemId))
-                throw new Exception("Item Not Found.");
+            if (!_cartRepository.Exists(cartId, itemId))
+                throw new ItemNotFoundException(itemId);
 
             return _cartRepository.RemoveItem(itemId);
         }
