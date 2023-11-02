@@ -25,6 +25,33 @@ namespace Carting.DataAccess.Repositories
             return _collection.FindOne(item => item.CartId == cartId && item.ItemId == itemId);
         }
 
+        public int UpdateItems(long itemId, string name, string url, double price)
+        {
+            var items = _collection.Query().Where(item => item.ItemId == itemId).ToList();
+            if (!items.Any())
+                return 0;
+
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrWhiteSpace(url) && item.Name != name)
+                    item.Name = name;
+
+                if (!string.IsNullOrWhiteSpace(url) && item.Price != price)
+                    item.Price = price;
+
+                if (!string.IsNullOrWhiteSpace(url))
+                {
+                    if (item.Image is null)
+                        item.Image = new Domain.ValueObjects.Image(url);
+
+                    if(item.Image.Url != url)
+                        item.Image.Url = url;
+                }                  
+            }
+
+            return _collection.Update(items);
+        }
+
         public long Addtem(Item item)
         {
             var cartItemId = _collection.Insert(item).AsInt64;
