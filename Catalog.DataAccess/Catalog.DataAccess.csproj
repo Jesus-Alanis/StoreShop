@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Catalog.Tests" />
+		<InternalsVisibleTo Include="Catalog.Infra.IoC" />
 	</ItemGroup>
 
 	<PropertyGroup>

@@ -40,12 +40,19 @@ namespace Catalog.DataAccess.Repositories
             return await _database.Categories.FindAsync(id);
         }
 
-        public async Task RemoveCategoryAsync(Category category)
+        public async Task RemoveCategoryAndItemsAsync(Category category)
         {
             if (_database is null)
                 return;
 
+            //TODO: implement cascade delete EF Core
+            var items = await _database.Items.Where(item => item.CategoryId == category.Id).ToListAsync();
+
+            foreach (var item in items)
+                _database.Items.Remove(item);
+
             _database.Categories.Remove(category);
+
             await _database.SaveChangesAsync();
         }
 

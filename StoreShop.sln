@@ -3,19 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carting", "Carting\Carting.csproj", "{A4C662E6-98AF-4DC8-A1EE-CB9A666BF6B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carting", "Carting\Carting.csproj", "{A4C662E6-98AF-4DC8-A1EE-CB9A666BF6B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Application", "Catalog.Application\Catalog.Application.csproj", "{951A4A5C-0190-4EC5-A842-896DCFFFB760}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Application", "Catalog.Application\Catalog.Application.csproj", "{951A4A5C-0190-4EC5-A842-896DCFFFB760}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.DataAccess", "Catalog.DataAccess\Catalog.DataAccess.csproj", "{2BC15571-36EC-4597-B87B-1C63B2A23380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.DataAccess", "Catalog.DataAccess\Catalog.DataAccess.csproj", "{2BC15571-36EC-4597-B87B-1C63B2A23380}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Domain", "Catalog.Domain\Catalog.Domain.csproj", "{D61644CF-1109-4CFF-A0B4-632B31C0D96B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Domain", "Catalog.Domain\Catalog.Domain.csproj", "{D61644CF-1109-4CFF-A0B4-632B31C0D96B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA9A887D-F52A-4846-8D4B-431F0FED38B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carting.Tests", "Carting.Tests\Carting.Tests.csproj", "{0D26089E-7134-48B2-9A94-215CCA8AC2B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carting.Tests", "Tests\Carting.Tests\Carting.Tests.csproj", "{0D26089E-7134-48B2-9A94-215CCA8AC2B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Tests", "Tests\Catalog.Tests\Catalog.Tests.csproj", "{8C154883-2F07-4C72-91CF-9D1B1286C443}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Tests", "Tests\Catalog.Tests\Catalog.Tests.csproj", "{8C154883-2F07-4C72-91CF-9D1B1286C443}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{35AA3C3D-5A9A-49E2-91FF-EFA6E730EEE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "API\Catalog.API\Catalog.API.csproj", "{574C56C3-C6A9-4D8A-BF71-1659477E9B83}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.Infra.IoC", "Catalog.Infra.IoC\Catalog.Infra.IoC.csproj", "{4F183446-600C-4FB6-B763-F7A40BBF95DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carting.API", "API\Carting.API\Carting.API.csproj", "{8F2B6558-0FA5-444C-A658-8C80BD6EB837}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +55,18 @@ Global
 		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C154883-2F07-4C72-91CF-9D1B1286C443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{574C56C3-C6A9-4D8A-BF71-1659477E9B83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{574C56C3-C6A9-4D8A-BF71-1659477E9B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{574C56C3-C6A9-4D8A-BF71-1659477E9B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{574C56C3-C6A9-4D8A-BF71-1659477E9B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F183446-600C-4FB6-B763-F7A40BBF95DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F183446-600C-4FB6-B763-F7A40BBF95DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F183446-600C-4FB6-B763-F7A40BBF95DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F183446-600C-4FB6-B763-F7A40BBF95DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F2B6558-0FA5-444C-A658-8C80BD6EB837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F2B6558-0FA5-444C-A658-8C80BD6EB837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F2B6558-0FA5-444C-A658-8C80BD6EB837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F2B6558-0FA5-444C-A658-8C80BD6EB837}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +74,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0D26089E-7134-48B2-9A94-215CCA8AC2B2} = {DA9A887D-F52A-4846-8D4B-431F0FED38B4}
 		{8C154883-2F07-4C72-91CF-9D1B1286C443} = {DA9A887D-F52A-4846-8D4B-431F0FED38B4}
+		{574C56C3-C6A9-4D8A-BF71-1659477E9B83} = {35AA3C3D-5A9A-49E2-91FF-EFA6E730EEE9}
+		{8F2B6558-0FA5-444C-A658-8C80BD6EB837} = {35AA3C3D-5A9A-49E2-91FF-EFA6E730EEE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16500F1C-22ED-43AA-B333-CE5CC270C572}

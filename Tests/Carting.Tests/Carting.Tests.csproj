@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Carting\Carting.csproj" />
+    <ProjectReference Include="..\..\Carting\Carting.csproj" />
   </ItemGroup>
 
 </Project>

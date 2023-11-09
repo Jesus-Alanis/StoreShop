@@ -42,18 +42,18 @@ namespace Catalog.Application
 
         }
 
-        public async Task RemoveCategoryAsync(long categoryId)
+        public async Task RemoveCategoryAndItemsAsync(long categoryId)
         {
             var category = await GetCategoryAsync(categoryId);
             if (category == null)
                 throw new Exception("Category Not Found.");
-
-            await _categoryRepository.RemoveCategoryAsync(category);
+           
+            await _categoryRepository.RemoveCategoryAndItemsAsync(category);
         }
 
-        public async Task<List<Item>> GetItemsAsync()
+        public async Task<List<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex)
         {
-            return await _itemRepository.GetItemsAsync();
+            return await _itemRepository.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
         }
 
         public async Task<Item> GetItemAsync(long id)
