@@ -11,7 +11,7 @@ namespace Catalog.Application
         Task RemoveCategoryAndItemsAsync(long categoryId);
 
         Task<Item> GetItemAsync(long id);
-        Task<List<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex);
+        Task<IList<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex);
         Task<long> AddItemAsync(DTOs.Item itemDto);
         Task UpdateItemAsync(long itemId, DTOs.Item itemDto);
         Task RemoveItemAsync(long itemId);

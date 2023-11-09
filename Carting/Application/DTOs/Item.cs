@@ -6,8 +6,8 @@ namespace Carting.Application.DTOs
     {
         public string Name { get; set; }
         public Image? Image { get; set; }
-        public double Price { get; set; }
-        public short Quantity { get; set; }
+        public double Price { get; }
+        public short Quantity { get; }
 
         public Item(string name, double price, short quantity)
         {

@@ -4,9 +4,9 @@ namespace Carting.Application.DTOs
 {
     public class Cart
     {
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public IEnumerable<Item> Items { get; set; }
+        public IEnumerable<Item> Items { get; }
 
         public Cart(string id, IEnumerable<Item> items)
         {
