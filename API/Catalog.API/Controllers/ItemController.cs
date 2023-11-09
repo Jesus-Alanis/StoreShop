@@ -20,7 +20,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Item>), StatusCodes.Status200OK)]
         public async Task<IResult> GetItems(long categoryId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
         {
-            var items = await _catalogService.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex).ConfigureAwait(false);
+            var items = await _catalogService.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
             return Results.Ok(items.Select(c => c.ToDto()));
         }
 
@@ -28,7 +28,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status200OK)]
         public async Task<IResult> GetItem(long itemId)
         {
-            var item = await _catalogService.GetItemAsync(itemId).ConfigureAwait(false);
+            var item = await _catalogService.GetItemAsync(itemId);
             return Results.Ok(item.ToDto());
         }
 
@@ -37,7 +37,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status201Created)]
         public async Task<IResult> CreateItem(Application.DTOs.Item dto)
         {
-            var itemId = await _catalogService.AddItemAsync(dto).ConfigureAwait(false);
+            var itemId = await _catalogService.AddItemAsync(dto);
             var location = Url.Action(nameof(GetItem), new { itemId }) ?? $"/{itemId}";
             return Results.Created(location, dto);
         }
@@ -47,7 +47,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> UpdateItem(long itemId, [FromBody] Application.DTOs.Item dto)
         {
-            await _catalogService.UpdateItemAsync(itemId, dto).ConfigureAwait(false);
+            await _catalogService.UpdateItemAsync(itemId, dto);
             return Results.Ok();
         }
 
@@ -55,7 +55,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> DeleteItem(long itemId)
         {
-            await _catalogService.RemoveItemAsync(itemId).ConfigureAwait(false);
+            await _catalogService.RemoveItemAsync(itemId);
             return Results.Ok();
         }
     }
