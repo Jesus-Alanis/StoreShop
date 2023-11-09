@@ -39,9 +39,9 @@ namespace Carting.API.Model.Swagger
         {
             var info = new OpenApiInfo
             {
-                Title = $"Notifications Service API",
+                Title = $"Carting API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Clario Notification API enables centralized notifications for internal Clario applications."
+                Description = "Carting API."
             };
 
             if (description.IsDeprecated)

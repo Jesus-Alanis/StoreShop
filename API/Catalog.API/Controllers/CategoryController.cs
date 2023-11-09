@@ -21,7 +21,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Category>), StatusCodes.Status200OK)]
         public async Task<IResult> GetCategories()
         {
-            var categories = await _catalogService.GetCategoriesAsync().ConfigureAwait(false);
+            var categories = await _catalogService.GetCategoriesAsync();
             return Results.Ok(categories.Select(c => c.ToDto()).AsEnumerable());
         }
 
@@ -29,7 +29,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Category), StatusCodes.Status200OK)]
         public async Task<IResult> GetCategory(long categoryId)
         {
-            var category = await _catalogService.GetCategoryAsync(categoryId).ConfigureAwait(false);
+            var category = await _catalogService.GetCategoryAsync(categoryId);
             return Results.Ok(category.ToDto());
         }
 
@@ -38,7 +38,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Category), StatusCodes.Status201Created)]
         public async Task<IResult> CreateCategory(Application.DTOs.Category dto)
         {
-            var categoryId = await _catalogService.AddCategoryAsync(dto).ConfigureAwait(false);
+            var categoryId = await _catalogService.AddCategoryAsync(dto);
             var location = Url.Action(nameof(GetCategory), new { categoryId }) ?? $"/{categoryId}";
             return Results.Created(location, dto);
         }
@@ -48,7 +48,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> UpdateCategory(long categoryId, [FromBody] Application.DTOs.Category dto)
         {
-            await _catalogService.UpdateCategoryAsync(categoryId, dto).ConfigureAwait(false);
+            await _catalogService.UpdateCategoryAsync(categoryId, dto);
             return Results.Ok();
         }
 
@@ -56,7 +56,7 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> DeleteCategory(long categoryId)
         {
-            await _catalogService.RemoveCategoryAndItemsAsync(categoryId).ConfigureAwait(false);
+            await _catalogService.RemoveCategoryAndItemsAsync(categoryId);
             return Results.Ok();
         }
 

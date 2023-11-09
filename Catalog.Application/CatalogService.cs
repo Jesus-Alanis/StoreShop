@@ -54,7 +54,7 @@ namespace Catalog.Application
             await _categoryRepository.RemoveCategoryAndItemsAsync(category);
         }
 
-        public async Task<List<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex)
+        public async Task<IList<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex)
         {
             return await _itemRepository.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
         }

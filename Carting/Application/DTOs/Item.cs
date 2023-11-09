@@ -10,8 +10,8 @@ namespace Carting.Application.DTOs
         public long ItemId { get; set; }
         public string Name { get; set; }
         public Image? Image { get; set; }
-        public double Price { get; set; }
-        public short Quantity { get; set; }
+        public double Price { get; }
+        public short Quantity { get; }
 
         public Item(long itemId, string name, double price, short quantity)
         {
