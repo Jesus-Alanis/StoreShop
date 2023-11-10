@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.2" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Catalog.Application\Catalog.Application.csproj" />
     <ProjectReference Include="..\..\Catalog.Domain\Catalog.Domain.csproj" />
     <ProjectReference Include="..\..\Catalog.Infra.IoC\Catalog.Infra.IoC.csproj" />

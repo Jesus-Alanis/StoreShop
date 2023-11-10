@@ -1,4 +1,4 @@
-using StoreShop.Infra;
+using Catalog.Infra.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 

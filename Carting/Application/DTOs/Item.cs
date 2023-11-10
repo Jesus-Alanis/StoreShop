@@ -7,8 +7,8 @@ namespace Carting.Application.DTOs
         /// <summary>
         /// Product Id
         /// </summary>
-        public long ItemId { get; set; }
-        public string Name { get; set; }
+        public long ItemId { get; }
+        public string Name { get; }
         public Image? Image { get; set; }
         public double Price { get; }
         public short Quantity { get; }

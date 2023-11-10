@@ -1,34 +1,30 @@
-﻿using Azure.Messaging.ServiceBus;
-using Carting.Domain.Entities;
+﻿using Carting.Domain.ExternalServices;
 using Carting.Domain.Repositories;
-using Carting.Infra.ExternalServices.MessageBroker.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace Carting.Infra.ExternalServices.MessageBroker
 {
     public class ItemMessageConsumer : BackgroundService
     {
-        private readonly IMessageBroker _messagebroker;
-        private readonly IConfiguration _configuration;
-        private readonly ICartRepository _cartRepository;
-        private ServiceBusProcessor? _processor;
+        private const string TOPIC_SUBSCRIPTION_NAME_SETTING = "CartItemsSubscription";
 
-        public ItemMessageConsumer(IMessageBroker messagebroker, IConfiguration configuration, ICartRepository cartRepository)
+        private readonly IMessageBroker _messagebroker;
+        private readonly MessageBrokerConfiguration _messageBrokerConfiguration;
+        private readonly ICartRepository _cartRepository;
+        private IMessageSubscriber? _processor;
+
+        public ItemMessageConsumer(IMessageBroker messagebroker, ICartRepository cartRepository, IOptions<MessageBrokerConfiguration> config)
         {
             _messagebroker = messagebroker;
-            _configuration = configuration;
+            _messageBrokerConfiguration = config.Value;
             _cartRepository = cartRepository;
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            var serviceBusConfiguration = _configuration.GetSection("AzureServiceBus");
-            var topicName = serviceBusConfiguration["TopicName"] ?? string.Empty;
-            var subscriptionname = serviceBusConfiguration["SubscriptionName"] ?? string.Empty;
-
-            _processor = _messagebroker.CreateProcessor(topicName, subscriptionname);
+            _processor = _messagebroker.CreateSubscriber(_messageBrokerConfiguration.CartItemsSubscription ?? string.Empty);
             await base.StartAsync(cancellationToken);
         }
 
@@ -37,42 +33,18 @@ namespace Carting.Infra.ExternalServices.MessageBroker
             if (_processor is null)
                 return;
 
-
-            _processor.SubscribeConsumer((json) => {
+            _processor.SubscribeConsumer<DTOs.Item>((dto) => {
                 var success = true;
                 
-                var dto = JsonSerializer.Deserialize<DTOs.Item>(json, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true });
-
                 if (dto is null)
                     return !success;
 
                 _ = _cartRepository.UpdateItems(dto.Id, dto.Name ?? string.Empty, dto.Url ?? string.Empty, dto.Price);
 
                 return success;
-            });
-
-            _processor.ProcessErrorAsync += (args) =>
-            {               
-                //TODO: log errors somewhere
-
-                return Task.CompletedTask;
-            };
-
-            await _processor.StartProcessingAsync();
+            });           
 
             await Task.CompletedTask;
-        }
-
-        public override async Task StopAsync(CancellationToken cancellationToken)
-        {
-            if (_processor is not null)
-            {
-                await _processor.StopProcessingAsync();
-                await _processor.DisposeAsync();
-            }
-
-
-            await base.StopAsync(cancellationToken);
         }
     }
 }

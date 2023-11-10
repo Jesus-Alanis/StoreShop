@@ -11,8 +11,6 @@
         public double Price { get; set; }
         public int Amount { get; set; }
 
-        public Item() { }
-
         public Item(string name, long categoryId, double price, int amount)
         {
             Name = name;

@@ -1,4 +1,5 @@
-﻿using Catalog.Application;
+﻿using Azure.Messaging.ServiceBus;
+using Catalog.Application;
 using Catalog.DataAccess;
 using Catalog.DataAccess.Repositories;
 using Catalog.Domain.ExternalServices;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace StoreShop.Infra
+namespace Catalog.Infra.IoC
 {
     public static class DependencyContainer
     {
@@ -31,10 +32,19 @@ namespace StoreShop.Infra
 
         private static void RegisterMessageBroker(this IServiceCollection services, IConfiguration configuration)
         {
-            var serviceBusConfiguration = configuration.GetSection("AzureServiceBus");
-            var connectionstring = serviceBusConfiguration["ConnectionString"] ?? string.Empty;
-            var topicName = serviceBusConfiguration["TopicName"] ?? string.Empty;
-            services.AddSingleton<IMessageBroker>(serviceProvider => new AzureServiceBus(connectionstring, topicName));
+            var config = configuration.GetSection("AzureServiceBus");
+
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClient(config["ConnectionString"]);
+
+                builder.AddClient<ServiceBusSender, ServiceBusClientOptions>((_, _, provider) =>
+                provider.GetService<ServiceBusClient>().CreateSender(config["CartItemsTopic"]))
+                                                        .WithName(config["CartItemsTopic"]);
+            });
+
+            services.Configure<MessageBrokerConfiguration>(config => configuration.GetSection("AzureServiceBus").Bind(config));
+            services.AddScoped<IMessageBroker, ServiceBusMessageBroker>();
         }
     }
 }

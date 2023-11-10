@@ -1,7 +1,7 @@
 ﻿namespace Catalog.Domain.ExternalServices
 {
-    public interface IMessageBroker : IDisposable
+    public interface IMessageBroker 
     {
-        Task PublishMessageAsync(object message);
+        IMessageSender CreateMessageSender(string topicName);
     }
 }

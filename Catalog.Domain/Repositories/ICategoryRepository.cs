@@ -4,7 +4,7 @@ namespace Catalog.Domain.Repositories
 {
     public interface ICategoryRepository : IDisposable
     {
-        Task<Category?> GetCategoryAsync(long id);
+        Task<Category?> GetCategoryAsync(long categoryId);
         Task<List<Category>> GetCategoriesAsync();
         Task<long> AddCategoryAsync(Category category);
         Task UpdateCategoryAsync(Category category);

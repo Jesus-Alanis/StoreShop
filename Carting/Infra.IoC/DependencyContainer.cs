@@ -1,7 +1,12 @@
-﻿using Carting.Application;
+﻿using Azure.Messaging.ServiceBus;
+using Carting.Application;
 using Carting.DataAccess.Repositories;
+using Carting.Domain.ExternalServices;
 using Carting.Domain.Repositories;
+using Carting.Infra.ExternalServices;
 using Carting.Infra.ExternalServices.MessageBroker;
+using LiteDB;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,9 +31,22 @@ namespace Carting.Infra.IoC
 
         private static void RegisterMessageBroker(this IServiceCollection services, IConfiguration configuration)
         {
-            var serviceBusConfiguration = configuration.GetSection("AzureServiceBus");
-            var connectionstring = serviceBusConfiguration["ConnectionString"] ?? string.Empty;
-            services.AddSingleton<IMessageBroker>(serviceProvider => new AzureServiceBus(connectionstring));
+            var config = configuration.GetSection("AzureServiceBus");
+
+            services.AddAzureClients(builder =>
+            {
+                builder.AddServiceBusClient(config["ConnectionString"]);
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                builder.AddClient<ServiceBusProcessor, ServiceBusProcessorOptions>((_, _, provider) =>
+                provider.GetService<ServiceBusClient>()
+                .CreateProcessor(config["CartItemsTopic"], config["CartItemsSubscription"], new ServiceBusProcessorOptions { MaxConcurrentCalls = 1, AutoCompleteMessages = false }))
+                .WithName(config["CartItemsSubscription"]);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            });
+
+            services.Configure<MessageBrokerConfiguration>(config => configuration.GetSection("AzureServiceBus").Bind(config));
+            services.AddSingleton<IMessageBroker, ServiceBusMessageBroker>();
         }
     }
 }

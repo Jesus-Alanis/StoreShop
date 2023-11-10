@@ -3,7 +3,7 @@ using Catalog.DataAccess.Repositories;
 using Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Carting.Tests
+namespace Catalog.Tests
 {
     public class DatabaseFixture : IDisposable
     {
