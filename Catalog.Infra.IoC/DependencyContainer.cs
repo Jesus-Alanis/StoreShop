@@ -39,7 +39,7 @@ namespace Catalog.Infra.IoC
                 builder.AddServiceBusClient(config["ConnectionString"]);
 
                 builder.AddClient<ServiceBusSender, ServiceBusClientOptions>((_, _, provider) =>
-                provider.GetService<ServiceBusClient>().CreateSender(config["CartItemsTopic"]))
+                provider.GetRequiredService<ServiceBusClient>().CreateSender(config["CartItemsTopic"]))
                                                         .WithName(config["CartItemsTopic"]);
             });
 

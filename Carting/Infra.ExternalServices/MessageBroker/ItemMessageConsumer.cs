@@ -34,14 +34,13 @@ namespace Carting.Infra.ExternalServices.MessageBroker
                 return;
 
             _processor.SubscribeConsumer<DTOs.Item>((dto) => {
-                var success = true;
                 
                 if (dto is null)
-                    return !success;
+                    return false;
 
                 _ = _cartRepository.UpdateItems(dto.Id, dto.Name ?? string.Empty, dto.Url ?? string.Empty, dto.Price);
 
-                return success;
+                return true;
             });           
 
             await Task.CompletedTask;

@@ -33,19 +33,23 @@ namespace Carting.DataAccess.Repositories
 
             foreach (var item in items)
             {
-                if (!string.IsNullOrWhiteSpace(url) && item.Name != name)
+                if (!string.IsNullOrWhiteSpace(name) && item.Name != name)
                     item.Name = name;
 
-                if (!string.IsNullOrWhiteSpace(url) && item.Price != price)
+                if (price > 0 && item.Price != price)
                     item.Price = price;
 
                 if (!string.IsNullOrWhiteSpace(url))
                 {
                     if (item.Image is null)
+                    {
                         item.Image = new Domain.ValueObjects.Image(url);
-
-                    if(item.Image.Url != url)
-                        item.Image.Url = url;
+                    }
+                    else
+                    {
+                        if (item.Image.Url != url)
+                            item.Image.Url = url;
+                    }                                  
                 }                  
             }
 

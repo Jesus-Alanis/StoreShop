@@ -5,7 +5,6 @@ using Carting.Domain.ExternalServices;
 using Carting.Domain.Repositories;
 using Carting.Infra.ExternalServices;
 using Carting.Infra.ExternalServices.MessageBroker;
-using LiteDB;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,12 +36,10 @@ namespace Carting.Infra.IoC
             {
                 builder.AddServiceBusClient(config["ConnectionString"]);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 builder.AddClient<ServiceBusProcessor, ServiceBusProcessorOptions>((_, _, provider) =>
-                provider.GetService<ServiceBusClient>()
-                .CreateProcessor(config["CartItemsTopic"], config["CartItemsSubscription"], new ServiceBusProcessorOptions { MaxConcurrentCalls = 1, AutoCompleteMessages = false }))
-                .WithName(config["CartItemsSubscription"]);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                provider.GetRequiredService<ServiceBusClient>()
+                    .CreateProcessor(config["CartItemsTopic"], config["CartItemsSubscription"], new ServiceBusProcessorOptions { MaxConcurrentCalls = 1, AutoCompleteMessages = false }))
+                    .WithName(config["CartItemsSubscription"]);
             });
 
             services.Configure<MessageBrokerConfiguration>(config => configuration.GetSection("AzureServiceBus").Bind(config));
