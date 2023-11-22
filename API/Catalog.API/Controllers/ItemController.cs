@@ -1,5 +1,6 @@
 ﻿using Catalog.Application;
 using Catalog.Application.Extensions;
+using Catalog.Domain.ExternalServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 

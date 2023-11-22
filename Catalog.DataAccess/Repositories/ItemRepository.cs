@@ -24,12 +24,12 @@ namespace Catalog.DataAccess.Repositories
             return item.Id;
         }
 
-        public async Task<Item?> GetItemAsync(long id)
+        public async Task<Item?> GetItemAsync(long itemId)
         {
             if (_database is null)
                 return null;
 
-            return await _database.Items.FindAsync(id);
+            return await _database.Items.FindAsync(itemId);
         }
 
         public async Task<IList<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex = 1)

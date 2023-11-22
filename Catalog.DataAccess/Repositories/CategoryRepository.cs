@@ -32,12 +32,12 @@ namespace Catalog.DataAccess.Repositories
             return await _database.Categories.ToListAsync();
         }
 
-        public async Task<Category?> GetCategoryAsync(long id)
+        public async Task<Category?> GetCategoryAsync(long categoryId)
         {
             if (_database is null)
                 return null;
             
-            return await _database.Categories.FindAsync(id);
+            return await _database.Categories.FindAsync(categoryId);
         }
 
         public async Task RemoveCategoryAndItemsAsync(Category category)

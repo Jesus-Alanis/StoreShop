@@ -11,7 +11,7 @@ namespace Carting.Application.Extentions
                 throw new ArgumentNullException(nameof(dto));
             }
 
-            return new Item(cartId, dto.Name, dto.Price, dto.Quantity)
+            return new Item(dto.ItemId, cartId, dto.Name, dto.Price, dto.Quantity)
             {
                 Image = dto.Image
             };
@@ -24,7 +24,7 @@ namespace Carting.Application.Extentions
                 throw new ArgumentNullException(nameof(item));
             }
 
-            return new DTOs.Item(item.Name, item.Price, item.Quantity)
+            return new DTOs.Item(item.ItemId, item.Name, item.Price, item.Quantity)
             {
                 Image = item.Image
             };

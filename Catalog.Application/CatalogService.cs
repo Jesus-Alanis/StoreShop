@@ -1,6 +1,9 @@
 ﻿using Catalog.Application.Extensions;
 using Catalog.Domain.Entities;
+using Catalog.Domain.Exceptions;
+using Catalog.Domain.ExternalServices;
 using Catalog.Domain.Repositories;
+using Microsoft.Extensions.Options;
 
 namespace Catalog.Application
 {
@@ -8,11 +11,13 @@ namespace Catalog.Application
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IItemRepository _itemRepository;
+        private readonly IMessageSender _messageSender;
 
-        public CatalogService(ICategoryRepository categoryRepository, IItemRepository itemRepository)
+        public CatalogService(ICategoryRepository categoryRepository, IItemRepository itemRepository, IMessageBroker messageBroker, IOptions<MessageBrokerConfiguration> config)
         {
             _categoryRepository = categoryRepository;
             _itemRepository = itemRepository;
+            _messageSender = messageBroker.CreateMessageSender(config.Value.CartItemsTopic ?? string.Empty);
         }
 
         public async Task<List<Category>> GetCategoriesAsync()
@@ -20,9 +25,9 @@ namespace Catalog.Application
             return await _categoryRepository.GetCategoriesAsync();
         }
 
-        public async Task<Category> GetCategoryAsync(long id)
+        public async Task<Category?> GetCategoryAsync(long categoryId)
         {
-            return await _categoryRepository.GetCategoryAsync(id);
+            return await _categoryRepository.GetCategoryAsync(categoryId);
         }
 
         public async Task<long> AddCategoryAsync(DTOs.Category categoryDto)
@@ -56,9 +61,9 @@ namespace Catalog.Application
             return await _itemRepository.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
         }
 
-        public async Task<Item> GetItemAsync(long id)
+        public async Task<Item?> GetItemAsync(long itemId)
         {
-            return await _itemRepository.GetItemAsync(id);
+            return await _itemRepository.GetItemAsync(itemId);
         }
 
         public async Task<long> AddItemAsync(DTOs.Item itemDto)
@@ -70,11 +75,12 @@ namespace Catalog.Application
         {
             var item = await GetItemAsync(itemId);
             if (item == null)
-                throw new Exception("Item Not Found.");
+                throw new ItemNotFoundException(itemId);
 
             itemDto.MapEntity(item);
 
             await _itemRepository.UpdateItemAsync(item);
+            await _messageSender.PublishMessageAsJsonAsync(item);
         }
 
         public async Task RemoveItemAsync(long itemId)

@@ -4,13 +4,18 @@ namespace Carting.Application.DTOs
 {
     public class Item
     {
-        public string Name { get; set; }
+        /// <summary>
+        /// Product Id
+        /// </summary>
+        public long ItemId { get; }
+        public string Name { get; }
         public Image? Image { get; set; }
         public double Price { get; }
         public short Quantity { get; }
 
-        public Item(string name, double price, short quantity)
+        public Item(long itemId, string name, double price, short quantity)
         {
+            ItemId = itemId;
             Name = name;
             Price = price;
             Quantity = quantity;

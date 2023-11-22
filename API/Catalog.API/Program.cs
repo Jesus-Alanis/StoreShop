@@ -1,9 +1,8 @@
-using StoreShop.Infra;
+using Catalog.Infra.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DependencyContainer.RegisterDatabase(builder.Services, builder.Configuration);
-DependencyContainer.RegisterServices(builder.Services);
+DependencyContainer.RegisterServices(builder.Services, builder.Configuration);
 
 builder.Services.AddControllers();
 

@@ -17,7 +17,7 @@ namespace Carting.Tests
         [Fact]
         public void AddCartItem_PassItem_ShouldSaveItem()
         {         
-            var item = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
+            var item = new Application.DTOs.Item(itemId: 1, name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
@@ -30,15 +30,15 @@ namespace Carting.Tests
         [Fact]
         public void RemoveCartItem_PassId_ShouldRemoveItem()
         {
-            var item = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
+            var item = new Application.DTOs.Item(itemId: 2, name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
             var cartId = Guid.NewGuid().ToString();
 
-            var id = _cartingService.AddItem(cartId, item);
-            var isDeleted = _cartingService.RemoveItem(cartId, id);
+            _ = _cartingService.AddItem(cartId, item);
+            var isDeleted = _cartingService.RemoveItem(cartId, 2);
 
             Assert.True(isDeleted);
         }
@@ -46,19 +46,19 @@ namespace Carting.Tests
         [Fact]
         public void GetCartItems_PassCartId2_ShouldGet2items()
         {
-            var item1 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
+            var item1 = new Application.DTOs.Item(itemId: 3, name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
             var cart2Id = Guid.NewGuid().ToString();
 
-            var item2 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
+            var item2 = new Application.DTOs.Item(itemId: 4, name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };
 
-            var item3 = new Application.DTOs.Item(name: "Lightbulb", price: 1.25, quantity: 1)
+            var item3 = new Application.DTOs.Item(itemId: 5, name: "Lightbulb", price: 1.25, quantity: 1)
             {
                 Image = new Domain.ValueObjects.Image("https://some.domain.com")
             };

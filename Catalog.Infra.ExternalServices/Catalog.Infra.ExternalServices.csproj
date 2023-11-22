@@ -7,18 +7,16 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Catalog.Tests" />
 		<InternalsVisibleTo Include="Catalog.Infra.IoC" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<WarningsAsErrors>CS8601,CS8602,CS8604,CS8618,CS8625,CS8629</WarningsAsErrors>
-	</PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.2" />
+    <PackageReference Include="Microsoft.Extensions.Azure" Version="1.7.1" />
+  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Catalog.DataAccess\Catalog.DataAccess.csproj" />
     <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
-    <ProjectReference Include="..\Catalog.Infra.ExternalServices\Catalog.Infra.ExternalServices.csproj" />
   </ItemGroup>
 
 </Project>

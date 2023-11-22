@@ -36,7 +36,8 @@ namespace Carting.Application
             if (!_cartRepository.Exists(cartId, itemId))
                 throw new ItemNotFoundException(itemId);
 
-            return _cartRepository.RemoveItem(itemId);
+            var item = _cartRepository.GetItem(cartId, itemId);
+            return _cartRepository.RemoveItem(item.Id);
         }
     }
 }

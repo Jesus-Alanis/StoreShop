@@ -22,26 +22,57 @@ namespace Carting.DataAccess.Repositories
 
         public Item GetItem(string cartId, long itemId)
         {
-            return _collection.FindOne(item => item.CartId == cartId && item.Id == itemId);
+            return _collection.FindOne(item => item.CartId == cartId && item.ItemId == itemId);
+        }
+
+        public int UpdateItems(long itemId, string name, string url, double price)
+        {
+            var items = _collection.Query().Where(item => item.ItemId == itemId).ToList();
+            if (!items.Any())
+                return 0;
+
+            foreach (var item in items)
+            {
+                if (!string.IsNullOrWhiteSpace(name) && item.Name != name)
+                    item.Name = name;
+
+                if (price > 0 && item.Price != price)
+                    item.Price = price;
+
+                if (!string.IsNullOrWhiteSpace(url))
+                {
+                    if (item.Image is null)
+                    {
+                        item.Image = new Domain.ValueObjects.Image(url);
+                    }
+                    else
+                    {
+                        if (item.Image.Url != url)
+                            item.Image.Url = url;
+                    }                                  
+                }                  
+            }
+
+            return _collection.Update(items);
         }
 
         public long Addtem(Item item)
         {
-            var id = _collection.Insert(item).AsInt64;
+            var cartItemId = _collection.Insert(item).AsInt64;
             _collection.EnsureIndex(i => i.CartId);
-            _collection.EnsureIndex(i => i.Id);
+            _collection.EnsureIndex(i => i.ItemId);
 
-            return id;
+            return cartItemId;
         }
 
-        public bool RemoveItem(long itemId)
+        public bool RemoveItem(long cartItemId)
         {
-            return _collection.Delete(itemId);
+            return _collection.Delete(cartItemId);
         }
 
         public bool Exists(string cartId, long itemId)
         {
-            return _collection.Exists(item => item.CartId == cartId && item.Id == itemId);
+            return _collection.Exists(item => item.CartId == cartId && item.ItemId == itemId);
         }
 
         ~CartRepository()
