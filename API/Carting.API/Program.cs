@@ -28,7 +28,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         },
         options => { builder.Configuration.Bind("AzureAd", options); });
 
-app.UseMiddleware<RequestLoggingMiddleware>();
+
 
 builder.Services.AddApiVersioning(setup =>
 {
@@ -55,6 +55,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
 
