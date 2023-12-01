@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.16.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Catalog.Application\Catalog.Application.csproj" />
     <ProjectReference Include="..\..\Catalog.Domain\Catalog.Domain.csproj" />
     <ProjectReference Include="..\..\Catalog.Infra.IoC\Catalog.Infra.IoC.csproj" />
