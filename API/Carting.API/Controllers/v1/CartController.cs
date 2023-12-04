@@ -1,14 +1,17 @@
 ﻿using Carting.Application;
-using Carting.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using System.Net.Mime;
 
 namespace Carting.API.Controllers.v1
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/carts")]
     [ApiVersion("1.0")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class CartController : ControllerBase
     {
         private readonly ICartingService _cartingService;
@@ -18,6 +21,7 @@ namespace Carting.API.Controllers.v1
             _cartingService = cartingService;
         }
 
+        [RequiredScope("manager.read, buyer.read")]
         [HttpGet("{cartId}")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(typeof(Application.DTOs.Cart), StatusCodes.Status200OK)]
@@ -27,6 +31,7 @@ namespace Carting.API.Controllers.v1
             return Results.Ok(cart);
         }
 
+        [RequiredScope("manager.read, buyer.read")]
         [HttpGet("{cartId}/items/{itemId}")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status200OK)]
@@ -36,6 +41,7 @@ namespace Carting.API.Controllers.v1
             return Results.Ok(item);
         }
 
+        [RequiredScope("manager.create, buyer.read")]
         [HttpPost("{cartId}/items")]
         [MapToApiVersion("1.0")]
         [Consumes(MediaTypeNames.Application.Json)]
@@ -47,6 +53,7 @@ namespace Carting.API.Controllers.v1
             return Results.Created(location, dto);
         }
 
+        [RequiredScope("manager.delete, buyer.read")]
         [HttpDelete("{cartId}/items/{itemId}")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]

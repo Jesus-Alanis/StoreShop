@@ -25,7 +25,32 @@ namespace Carting.API.Model.Swagger
 
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
-            options.IncludeXmlComments(xmlFilePath);           
+            options.IncludeXmlComments(xmlFilePath);
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\nEnter your token in the text input below. \r\n\r\nExample: \"12345abcdef\"",
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                                    {
+                                        {
+                                             new OpenApiSecurityScheme
+                                             {
+                                                 Reference = new OpenApiReference
+                                                 {
+                                                     Type = ReferenceType.SecurityScheme,
+                                                     Id = "Bearer"
+                                                 }
+                                             },
+                                             Array.Empty<string>()
+                                        }
+                                    });
 
             options.CustomSchemaIds(x => x.FullName);
         }
