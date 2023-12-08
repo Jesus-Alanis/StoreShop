@@ -1,6 +1,7 @@
 ﻿using Catalog.Application;
 using Catalog.Domain.ExternalServices;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using DTOs = Catalog.Application.DTOs;
@@ -28,7 +29,8 @@ namespace Catalog.Tests
             var config = new Mock<IOptions<MessageBrokerConfiguration>>();
             config.Setup(s => s.Value).Returns(_brokerConfig);
 
-            _catalogService = new CatalogService(fixture.CategoryRepository, fixture.ItemRepository, _messageBroker.Object, config.Object);
+            var loggerFactory = new NullLoggerFactory();
+            _catalogService = new CatalogService(loggerFactory.CreateLogger<CatalogService>(), fixture.CategoryRepository, fixture.ItemRepository, _messageBroker.Object, config.Object);
         }
 
         [Fact]

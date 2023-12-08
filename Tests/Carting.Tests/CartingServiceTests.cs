@@ -1,6 +1,7 @@
 ﻿using Carting.Application;
-using Carting.Domain.Entities;
 using Carting.Domain.Exceptions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Carting.Tests
 {
@@ -11,7 +12,8 @@ namespace Carting.Tests
 
         public CartingServiceTests(DatabaseFixture fixture)
         {
-            _cartingService = new CartingService(fixture.CartRepository);
+            var loggerFactory = new NullLoggerFactory();
+            _cartingService = new CartingService(loggerFactory.CreateLogger<CartingService>(), fixture.CartRepository);
         }
 
         [Fact]

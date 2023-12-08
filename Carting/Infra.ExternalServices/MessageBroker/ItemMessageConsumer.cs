@@ -1,22 +1,22 @@
 ﻿using Carting.Domain.ExternalServices;
 using Carting.Domain.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Carting.Infra.ExternalServices.MessageBroker
 {
     public class ItemMessageConsumer : BackgroundService
     {
-        private const string TOPIC_SUBSCRIPTION_NAME_SETTING = "CartItemsSubscription";
-
+        private readonly ILogger<ItemMessageConsumer> _logger;
         private readonly IMessageBroker _messagebroker;
         private readonly MessageBrokerConfiguration _messageBrokerConfiguration;
         private readonly ICartRepository _cartRepository;
         private IMessageSubscriber? _processor;
 
-        public ItemMessageConsumer(IMessageBroker messagebroker, ICartRepository cartRepository, IOptions<MessageBrokerConfiguration> config)
+        public ItemMessageConsumer(ILogger<ItemMessageConsumer> logger, IMessageBroker messagebroker, ICartRepository cartRepository, IOptions<MessageBrokerConfiguration> config)
         {
+            _logger = logger;
             _messagebroker = messagebroker;
             _messageBrokerConfiguration = config.Value;
             _cartRepository = cartRepository;
@@ -24,6 +24,7 @@ namespace Carting.Infra.ExternalServices.MessageBroker
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("Starting Item Message Consumer");
             _processor = _messagebroker.CreateSubscriber(_messageBrokerConfiguration.CartItemsSubscription ?? string.Empty);
             await base.StartAsync(cancellationToken);
         }

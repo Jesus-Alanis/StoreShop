@@ -5,6 +5,7 @@ using Catalog.DataAccess.Repositories;
 using Catalog.Domain.ExternalServices;
 using Catalog.Domain.Repositories;
 using Catalog.Infra.ExternalServices;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +17,9 @@ namespace Catalog.Infra.IoC
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            RegisterDatabase(services, configuration);
-            RegisterMessageBroker(services, configuration);
+            services.RegisterDatabase(configuration);
+            services.RegisterMessageBroker(configuration);
+            services.RegisterLogging();
 
             services.AddScoped<ICatalogService, CatalogService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -45,6 +47,18 @@ namespace Catalog.Infra.IoC
 
             services.Configure<MessageBrokerConfiguration>(config => configuration.GetSection("AzureServiceBus").Bind(config));
             services.AddScoped<IMessageBroker, ServiceBusMessageBroker>();
+        }
+
+        private static void RegisterLogging(this IServiceCollection services)
+        {
+            services.Configure<TelemetryConfiguration>(config => {
+                config.TelemetryInitializers.Add(new OperationCorrelationTelemetryInitializer());
+            });
+
+            services.AddApplicationInsightsTelemetry(options => {
+                options.EnableAdaptiveSampling = false;
+                options.EnableQuickPulseMetricStream = false;
+            });
         }
     }
 }

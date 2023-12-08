@@ -14,10 +14,12 @@ namespace Catalog.API.Controllers
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class CategoryController : ControllerBase
     {
+        private readonly ILogger<CategoryController> _logger;
         private readonly ICatalogService _catalogService;
 
-        public CategoryController(ICatalogService catalogService)
+        public CategoryController(ILogger<CategoryController> logger, ICatalogService catalogService)
         {
+            _logger = logger;
             _catalogService = catalogService;
         }
 
@@ -26,8 +28,11 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Category>), StatusCodes.Status200OK)]
         public async Task<IResult> GetCategories()
         {
-            var categories = await _catalogService.GetCategoriesAsync();
-            return Results.Ok(categories.Select(c => c.ToDto()).AsEnumerable());
+            using (_logger.BeginScope("Getting all categories"))
+            {
+                var categories = await _catalogService.GetCategoriesAsync();
+                return Results.Ok(categories.Select(c => c.ToDto()).AsEnumerable());
+            }            
         }
 
         [RequiredScope("manager.read, buyer.read")]
@@ -35,8 +40,19 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Category), StatusCodes.Status200OK)]
         public async Task<IResult> GetCategory(long categoryId)
         {
-            var category = await _catalogService.GetCategoryAsync(categoryId);
-            return Results.Ok(category.ToDto());
+            using (_logger.BeginScope(new Dictionary<string, object>
+            {
+                [nameof(categoryId)] = categoryId
+            }))
+            {
+                var category = await _catalogService.GetCategoryAsync(categoryId);
+                if (category == null) {
+                    _logger.LogInformation(string.Format("Category not found: {0}", categoryId));
+                    return Results.NotFound();
+                }                   
+
+                return Results.Ok(category.ToDto());
+            }           
         }
 
         [RequiredScope("manager.create")]
@@ -45,9 +61,15 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Category), StatusCodes.Status201Created)]
         public async Task<IResult> CreateCategory(Application.DTOs.Category dto)
         {
-            var categoryId = await _catalogService.AddCategoryAsync(dto);
-            var location = Url.Action(nameof(GetCategory), new { categoryId }) ?? $"/{categoryId}";
-            return Results.Created(location, dto);
+            using (_logger.BeginScope(new Dictionary<string, object>
+            {
+                ["category"] = dto
+            }))
+            {
+                var categoryId = await _catalogService.AddCategoryAsync(dto);
+                var location = Url.Action(nameof(GetCategory), new { categoryId }) ?? $"/{categoryId}";
+                return Results.Created(location, dto);
+            }            
         }
 
         [RequiredScope("manager.update")]
@@ -56,8 +78,15 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> UpdateCategory(long categoryId, [FromBody] Application.DTOs.Category dto)
         {
-            await _catalogService.UpdateCategoryAsync(categoryId, dto);
-            return Results.Ok();
+            using (_logger.BeginScope(new Dictionary<string, object>
+            {
+                [nameof(categoryId)] = categoryId,
+                ["category"] = dto
+            }))
+            {
+                await _catalogService.UpdateCategoryAsync(categoryId, dto);
+                return Results.Ok();
+            }           
         }
 
         [RequiredScope("manager.delete")]
@@ -65,8 +94,14 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> DeleteCategory(long categoryId)
         {
-            await _catalogService.RemoveCategoryAndItemsAsync(categoryId);
-            return Results.Ok();
+            using (_logger.BeginScope(new Dictionary<string, object>
+            {
+                [nameof(categoryId)] = categoryId
+            }))
+            {
+                await _catalogService.RemoveCategoryAndItemsAsync(categoryId);
+                return Results.Ok();
+            }            
         }
 
     }

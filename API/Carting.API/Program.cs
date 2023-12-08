@@ -12,7 +12,7 @@ builder.Services.ConfigureOptions<CustomSwaggerOptions>();
 
 builder.Services.ConfigureOptions<CustomSwaggerUIOptions>();
 
-DependencyContainer.RegisterServices(builder.Services, builder.Configuration);
+builder.Services.RegisterServices(builder.Configuration);
 
 builder.Services.AddSwaggerGen();
 
