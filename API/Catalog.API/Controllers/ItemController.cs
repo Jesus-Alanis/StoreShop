@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using System.Net.Mime;
+using System.Text.Json;
 
 namespace Catalog.API.Controllers
 {
@@ -69,7 +70,7 @@ namespace Catalog.API.Controllers
         {
             using (_logger.BeginScope(new Dictionary<string, object>
             {
-                ["item"] = dto
+                ["item"] = JsonSerializer.Serialize(dto)
             }))
             {
                 var itemId = await _catalogService.AddItemAsync(dto);
@@ -87,7 +88,7 @@ namespace Catalog.API.Controllers
             using (_logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(itemId)] = itemId,
-                ["item"] = dto
+                ["item"] = JsonSerializer.Serialize(dto)
             }))
             {
                 await _catalogService.UpdateItemAsync(itemId, dto);

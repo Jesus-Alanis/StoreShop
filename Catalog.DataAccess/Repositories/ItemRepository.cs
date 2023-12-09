@@ -67,7 +67,7 @@ namespace Catalog.DataAccess.Repositories
                 return;
 
             _database.Items.Update(item);
-            _logger.LogInformation("Updating category.");
+            _logger.LogInformation("Updating item.");
             await _database.SaveChangesAsync();
         }
 

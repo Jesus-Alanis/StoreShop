@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using System.Net.Mime;
+using System.Text.Json;
 
 namespace Carting.API.Controllers.v1
 {
@@ -67,7 +68,7 @@ namespace Carting.API.Controllers.v1
             using (_logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(cartId)] = cartId,
-                ["item"] = dto.ItemId
+                ["item"] = JsonSerializer.Serialize(dto)
             }))
             {
                 var itemId = _cartingService.AddItem(cartId, dto);
