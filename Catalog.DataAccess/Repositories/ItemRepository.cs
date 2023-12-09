@@ -35,7 +35,7 @@ namespace Catalog.DataAccess.Repositories
             if (_database is null)
                 return null;
 
-            _logger.LogInformation("Finding category.");
+            _logger.LogInformation("Finding item.");
             return await _database.Items.FindAsync(itemId);
         }
 
