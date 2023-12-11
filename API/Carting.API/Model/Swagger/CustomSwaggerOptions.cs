@@ -27,6 +27,8 @@ namespace Carting.API.Model.Swagger
             var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
             options.IncludeXmlComments(xmlFilePath);
 
+            options.OperationFilter<AddCorrelationHeaderParameter>();
+
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",

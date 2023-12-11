@@ -28,12 +28,13 @@ namespace Carting.Infra.ExternalServices
             _processor.ProcessMessageAsync += async (args) =>
             {
                 using (_logger.BeginScope(new Dictionary<string, object> {
-                    [nameof(args.Message.SequenceNumber)] = args.Message.SequenceNumber,
-                    [nameof(args.Message.MessageId)] = args.Message.MessageId
+                    [nameof(args.Message.CorrelationId)] = args.Message.CorrelationId
                 }))
                 {
                     try
                     {
+                        _logger.LogInformation("Received message");
+
                         var obj = args.Message.Body.ToObjectFromJson<T>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true });
 
                         var success = messageDelegate.Invoke(obj);

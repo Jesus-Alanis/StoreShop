@@ -2,6 +2,6 @@
 {
     public interface IMessageSender
     {
-        Task PublishMessageAsJsonAsync(object message);
+        Task PublishMessageAsJsonAsync(object message, string? correlationId = null);
     }
 }

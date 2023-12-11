@@ -13,7 +13,7 @@ namespace Catalog.Application
         Task<Item?> GetItemAsync(long itemId);
         Task<IList<Item>> GetPaginatedItemsAsync(long categoryId, int pageSize, int pageIndex);
         Task<long> AddItemAsync(DTOs.Item itemDto);
-        Task UpdateItemAsync(long itemId, DTOs.Item itemDto);
+        Task UpdateItemAsync(long itemId, DTOs.Item itemDto, string? correlationId = null);
         Task RemoveItemAsync(long itemId);
     }
 }

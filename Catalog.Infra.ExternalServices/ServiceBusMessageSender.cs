@@ -16,13 +16,13 @@ namespace Catalog.Infra.ExternalServices
             _sender = serviceBusSender;
         }
 
-        public async Task PublishMessageAsJsonAsync(object message)
+        public async Task PublishMessageAsJsonAsync(object message, string? correlationId = null)
         {
             if (_sender is null)
                 throw new ArgumentNullException(nameof(_sender));
 
             var json = JsonSerializer.Serialize(message, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true });
-            var serviceBusMessage = new ServiceBusMessage(json) { ContentType = "application/json" };
+            var serviceBusMessage = new ServiceBusMessage(json) { CorrelationId = correlationId, ContentType = "application/json" };
 
             _logger.LogInformation(string.Format("Publishing message to Azure Service Bus: {0}", _sender.FullyQualifiedNamespace));
             await _sender.SendMessageAsync(serviceBusMessage);

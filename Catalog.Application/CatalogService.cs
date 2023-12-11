@@ -79,7 +79,7 @@ namespace Catalog.Application
             return await _itemRepository.AddItemAsync(itemDto.ToEntity());
         }
 
-        public async Task UpdateItemAsync(long itemId, DTOs.Item itemDto)
+        public async Task UpdateItemAsync(long itemId, DTOs.Item itemDto, string? correlationId = null)
         {
             _logger.LogInformation("Finding item");
             var item = await GetItemAsync(itemId);
@@ -90,7 +90,7 @@ namespace Catalog.Application
             itemDto.MapEntity(item);
 
             await _itemRepository.UpdateItemAsync(item);
-            await _messageSender.PublishMessageAsJsonAsync(item);
+            await _messageSender.PublishMessageAsJsonAsync(item, correlationId);
         }
 
         public async Task RemoveItemAsync(long itemId)

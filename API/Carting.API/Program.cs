@@ -52,6 +52,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseMiddleware<CorrelationIdContext>();
+
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();

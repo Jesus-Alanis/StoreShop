@@ -83,7 +83,7 @@ namespace Catalog.API.Controllers
         [HttpPut("{itemId}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IResult> UpdateItem(long itemId, [FromBody] Application.DTOs.Item dto)
+        public async Task<IResult> UpdateItem(long itemId, [FromBody] Application.DTOs.Item dto, [FromHeader(Name = "x-correlation-id")] string? correlationId = null)
         {
             using (_logger.BeginScope(new Dictionary<string, object>
             {
@@ -91,7 +91,7 @@ namespace Catalog.API.Controllers
                 ["item"] = JsonSerializer.Serialize(dto)
             }))
             {
-                await _catalogService.UpdateItemAsync(itemId, dto);
+                await _catalogService.UpdateItemAsync(itemId, dto, correlationId);
                 return Results.Ok();
             }            
         }
