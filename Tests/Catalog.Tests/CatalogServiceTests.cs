@@ -20,7 +20,7 @@ namespace Catalog.Tests
             _brokerConfig = new MessageBrokerConfiguration { CartItemsTopic = "cart_items" };
 
             _messageSender = new Mock<IMessageSender>();
-            _messageSender.Setup(sender => sender.PublishMessageAsJsonAsync(It.IsAny<object>()));
+            _messageSender.Setup(sender => sender.PublishMessageAsJsonAsync(It.IsAny<object>(), It.IsAny<string>()));
 
             _messageBroker = new Mock<IMessageBroker>();
             _messageBroker.Setup(s => s.CreateMessageSender(_brokerConfig.CartItemsTopic)).Returns(_messageSender.Object);
@@ -94,7 +94,7 @@ namespace Catalog.Tests
 
             await _catalogService.UpdateItemAsync(itemId, item);
 
-            _messageSender.Verify(sender => sender.PublishMessageAsJsonAsync(It.IsAny<object>()), Times.Once());
+            _messageSender.Verify(sender => sender.PublishMessageAsJsonAsync(It.IsAny<object>(), It.IsAny<string>()), Times.Once());
         }
     }
 }
