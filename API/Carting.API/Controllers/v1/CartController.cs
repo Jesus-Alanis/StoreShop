@@ -54,6 +54,12 @@ namespace Carting.API.Controllers.v1
             }))
             {
                 var item = _cartingService.GetItem(cartId, itemId);
+                if(item == null)
+                {
+                    _logger.LogWarning("Cart Item Not Found");
+                    Results.NotFound();
+                }
+
                 return Results.Ok(item);
             }            
         }

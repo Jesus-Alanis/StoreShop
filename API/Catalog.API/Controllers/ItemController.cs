@@ -55,7 +55,7 @@ namespace Catalog.API.Controllers
                 var item = await _catalogService.GetItemAsync(itemId);
                 if (item == null)
                 {
-                    _logger.LogInformation(string.Format("Item not found: {0}", itemId));
+                    _logger.LogWarning("Item not found");
                     return Results.NotFound();
                 }
                 return Results.Ok(item.ToDto());

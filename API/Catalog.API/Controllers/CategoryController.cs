@@ -48,7 +48,7 @@ namespace Catalog.API.Controllers
             {
                 var category = await _catalogService.GetCategoryAsync(categoryId);
                 if (category == null) {
-                    _logger.LogInformation(string.Format("Category not found: {0}", categoryId));
+                    _logger.LogWarning("Category not found");
                     return Results.NotFound();
                 }                   
 

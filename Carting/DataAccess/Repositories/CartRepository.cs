@@ -25,7 +25,7 @@ namespace Carting.DataAccess.Repositories
             return _collection.Query().Where(item => item.CartId == cartId).ToList();
         }
 
-        public Item GetItem(string cartId, long itemId)
+        public Item? GetItem(string cartId, long itemId)
         {
             _logger.LogInformation(string.Format("Querying {0} collection", COLLECTION_NAME));
             return _collection.FindOne(item => item.CartId == cartId && item.ItemId == itemId);
@@ -78,11 +78,6 @@ namespace Carting.DataAccess.Repositories
         {
             _logger.LogInformation(string.Format("Deleting from {0} collection", COLLECTION_NAME));
             return _collection.Delete(cartItemId);
-        }
-
-        public bool Exists(string cartId, long itemId)
-        {
-            return _collection.Exists(item => item.CartId == cartId && item.ItemId == itemId);
         }
 
         ~CartRepository()
