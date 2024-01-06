@@ -1,0 +1,37 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Carting.gRPC.Services";
+
+service Carting {
+    rpc GetItemsUnaryCall (Cart) returns (CartResponse);
+    rpc GetItemsServerStreaming (Cart) returns (stream Item);
+    rpc AddItemClientStreaming (stream ItemRequest) returns (CartResponse);
+    rpc AddItemDuplexStreaming  (stream ItemRequest) returns (stream CartResponse);
+}
+
+message Cart {
+  string cartId = 1;
+}
+
+message Item {
+    int64 ItemId = 1;
+    string Name  = 2;
+    Image Image = 3;
+    double Price  = 4;
+    fixed32 Quantity  = 5;
+}
+
+message Image {
+    string url = 1;
+    string altText = 2;
+}
+
+message ItemRequest {
+    string cartId = 1;
+    Item item = 2;
+}
+
+message CartResponse {
+    string cartId = 1;
+    repeated Item items = 2;
+}
