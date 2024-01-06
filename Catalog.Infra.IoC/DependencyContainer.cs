@@ -21,15 +21,16 @@ namespace Catalog.Infra.IoC
             services.RegisterMessageBroker(configuration);
             services.RegisterLogging();
 
-            services.AddScoped<ICatalogService, CatalogService>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IItemRepository, ItemRepository>();            
+            services.AddScoped<ICatalogService, CatalogService>();                    
         }
 
         private static void RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionstring = configuration.GetConnectionString("InMemory") ?? string.Empty;
             services.AddDbContext<CatalogDbContext>(options => options.UseInMemoryDatabase(connectionstring), contextLifetime: ServiceLifetime.Transient, optionsLifetime: ServiceLifetime.Singleton);
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
         }
 
         private static void RegisterMessageBroker(this IServiceCollection services, IConfiguration configuration)

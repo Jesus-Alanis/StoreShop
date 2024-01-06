@@ -1,6 +1,5 @@
 ﻿using Catalog.Application;
 using Catalog.Application.Extensions;
-using Catalog.Domain.ExternalServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
@@ -30,16 +29,15 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Application.DTOs.Item>), StatusCodes.Status200OK)]
         public async Task<IResult> GetItems(long categoryId, [FromQuery] int pageSize, [FromQuery] int pageIndex)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(categoryId)] = categoryId,
                 [nameof(pageSize)] = pageSize,
                 [nameof(pageIndex)] = pageIndex
-            }))
-            {
-                var items = await _catalogService.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
-                return Results.Ok(items.Select(c => c.ToDto()));
-            }            
+            });
+
+            var items = await _catalogService.GetPaginatedItemsAsync(categoryId, pageSize, pageIndex);
+            return Results.Ok(items.Select(c => c.ToDto()));
         }
 
         [RequiredScope("manager.read, buyer.read")]
@@ -47,19 +45,18 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status200OK)]
         public async Task<IResult> GetItem(long itemId)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(itemId)] = itemId
-            }))
+            });
+
+            var item = await _catalogService.GetItemAsync(itemId);
+            if (item == null)
             {
-                var item = await _catalogService.GetItemAsync(itemId);
-                if (item == null)
-                {
-                    _logger.LogWarning("Item not found");
-                    return Results.NotFound();
-                }
-                return Results.Ok(item.ToDto());
-            }            
+                _logger.LogWarning("Item not found");
+                return Results.NotFound();
+            }
+            return Results.Ok(item.ToDto());
         }
 
         [RequiredScope("manager.create")]
@@ -68,15 +65,14 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(typeof(Application.DTOs.Item), StatusCodes.Status201Created)]
         public async Task<IResult> CreateItem(Application.DTOs.Item dto)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 ["item"] = JsonSerializer.Serialize(dto)
-            }))
-            {
-                var itemId = await _catalogService.AddItemAsync(dto);
-                var location = Url.Action(nameof(GetItem), new { itemId }) ?? $"/{itemId}";
-                return Results.Created(location, dto);
-            }           
+            });
+
+            var itemId = await _catalogService.AddItemAsync(dto);
+            var location = Url.Action(nameof(GetItem), new { itemId }) ?? $"/{itemId}";
+            return Results.Created(location, dto);
         }
 
         [RequiredScope("manager.update")]
@@ -85,15 +81,14 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> UpdateItem(long itemId, [FromBody] Application.DTOs.Item dto, [FromHeader(Name = "x-correlation-id")] string? correlationId = null)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(itemId)] = itemId,
                 ["item"] = JsonSerializer.Serialize(dto)
-            }))
-            {
-                await _catalogService.UpdateItemAsync(itemId, dto, correlationId);
-                return Results.Ok();
-            }            
+            });
+
+            await _catalogService.UpdateItemAsync(itemId, dto, correlationId);
+            return Results.Ok();
         }
 
         [RequiredScope("manager.delete")]
@@ -101,14 +96,13 @@ namespace Catalog.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IResult> DeleteItem(long itemId)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(itemId)] = itemId
-            }))
-            {
-                await _catalogService.RemoveItemAsync(itemId);
-                return Results.Ok();
-            }            
+            });
+
+            await _catalogService.RemoveItemAsync(itemId);
+            return Results.Ok();
         }
     }
 }
