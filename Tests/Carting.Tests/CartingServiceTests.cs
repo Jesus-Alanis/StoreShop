@@ -12,8 +12,7 @@ namespace Carting.Tests
 
         public CartingServiceTests(DatabaseFixture fixture)
         {
-            var loggerFactory = new NullLoggerFactory();
-            _cartingService = new CartingService(loggerFactory.CreateLogger<CartingService>(), fixture.CartRepository);
+            _cartingService = new CartingService(fixture.CartRepository);
         }
 
         [Fact]

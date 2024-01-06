@@ -29,8 +29,7 @@ namespace Catalog.Tests
             var config = new Mock<IOptions<MessageBrokerConfiguration>>();
             config.Setup(s => s.Value).Returns(_brokerConfig);
 
-            var loggerFactory = new NullLoggerFactory();
-            _catalogService = new CatalogService(loggerFactory.CreateLogger<CatalogService>(), fixture.CategoryRepository, fixture.ItemRepository, _messageBroker.Object, config.Object);
+             _catalogService = new CatalogService(fixture.CategoryRepository, fixture.ItemRepository, _messageBroker.Object, config.Object);
         }
 
         [Fact]
