@@ -67,21 +67,5 @@ namespace Carting.Tests
 
             Assert.Equal(2, items.Count);
         }
-
-        [Fact]
-        public void Exists_PassId_ShouldFindItem()
-        {
-            var cartId = Guid.NewGuid().ToString();
-
-            var item = new Item(itemId: 6, cartId: cartId, name: "Lightbulb", price: 1.25, quantity: 1)
-            {
-                Image = new Domain.ValueObjects.Image("https://some.domain.com")
-            };
-
-            _ = _fixture.CartRepository.Addtem(item);
-            var isFound = _fixture.CartRepository.Exists(cartId, 6);
-
-            Assert.True(isFound);
-        }
     }
 }

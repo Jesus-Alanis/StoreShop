@@ -1,5 +1,7 @@
 ﻿using Carting.DataAccess.Repositories;
 using Carting.Domain.Repositories;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Carting.Tests
 {
@@ -10,7 +12,8 @@ namespace Carting.Tests
 
         public DatabaseFixture()
         {
-            CartRepository = new CartRepository(":memory:");
+            var loggerFactory = new NullLoggerFactory();
+            CartRepository = new CartRepository(loggerFactory.CreateLogger<CartRepository>(), ":memory:");
         }
 
         public void Dispose()

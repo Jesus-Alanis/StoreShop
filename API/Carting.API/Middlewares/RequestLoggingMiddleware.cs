@@ -11,7 +11,7 @@
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             if (context.User?.Identity?.IsAuthenticated ?? false)
             {

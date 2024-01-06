@@ -5,9 +5,11 @@ using Carting.Domain.ExternalServices;
 using Carting.Domain.Repositories;
 using Carting.Infra.ExternalServices;
 using Carting.Infra.ExternalServices.MessageBroker;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Carting.Infra.IoC
 {
@@ -15,17 +17,20 @@ namespace Carting.Infra.IoC
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            RegisterDatabase(services, configuration);
-            RegisterMessageBroker(services, configuration);
+            services.RegisterDatabase(configuration);
+            services.RegisterMessageBroker(configuration);
+            services.RegisterLogging();
 
             services.AddScoped<ICartingService, CartingService>();
-            services.AddHostedService<ItemMessageConsumer>();
         }
 
         private static void RegisterDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("InMemory") ?? string.Empty;
-            services.AddSingleton<ICartRepository>(serviceProvider => new CartRepository(connectionString));
+            services.AddSingleton<ICartRepository>(serviceProvider => {
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                return new CartRepository(loggerFactory.CreateLogger<CartRepository>(), connectionString);
+            });
         }
 
         private static void RegisterMessageBroker(this IServiceCollection services, IConfiguration configuration)
@@ -44,6 +49,19 @@ namespace Carting.Infra.IoC
 
             services.Configure<MessageBrokerConfiguration>(config => configuration.GetSection("AzureServiceBus").Bind(config));
             services.AddSingleton<IMessageBroker, ServiceBusMessageBroker>();
+            services.AddHostedService<ItemMessageConsumer>();
+        }
+
+        private static void RegisterLogging(this IServiceCollection services)
+        {
+            services.Configure<TelemetryConfiguration>(config => {
+                config.TelemetryInitializers.Add(new OperationCorrelationTelemetryInitializer());
+            });
+
+            services.AddApplicationInsightsTelemetry(options => {
+                options.EnableAdaptiveSampling = false;
+                options.EnableQuickPulseMetricStream = false;
+            });
         }
     }
 }

@@ -1,15 +1,20 @@
 ﻿using Catalog.Domain.Entities;
 using Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Catalog.DataAccess.Repositories
 {
     internal class ItemRepository : IItemRepository
     {
+        private const string TABLE_NAME = "Item";
+
+        private readonly ILogger<ItemRepository> _logger;
         private CatalogDbContext? _database;
 
-        public ItemRepository(CatalogDbContext database)
+        public ItemRepository(ILogger<ItemRepository> logger, CatalogDbContext database)
         {
+            _logger = logger;
             _database = database;
         }
 
@@ -19,6 +24,7 @@ namespace Catalog.DataAccess.Repositories
                 return 0;
 
             _database.Items.Add(item);
+            _logger.LogInformation(string.Format("Inserting item into {0} table", TABLE_NAME));
             await _database.SaveChangesAsync();
 
             return item.Id;
@@ -29,6 +35,7 @@ namespace Catalog.DataAccess.Repositories
             if (_database is null)
                 return null;
 
+            _logger.LogInformation("Finding item.");
             return await _database.Items.FindAsync(itemId);
         }
 
@@ -37,6 +44,7 @@ namespace Catalog.DataAccess.Repositories
             if (_database is null)
                 return Array.Empty<Item>();
 
+            _logger.LogInformation(string.Format("Getting items from {0} table", TABLE_NAME));
             return await _database.Items.Where(item => item.CategoryId == categoryId)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -49,6 +57,7 @@ namespace Catalog.DataAccess.Repositories
                 return;
 
             _database.Items.Remove(item);
+            _logger.LogInformation("Removing item.");
             await _database.SaveChangesAsync();
         }
 
@@ -58,6 +67,7 @@ namespace Catalog.DataAccess.Repositories
                 return;
 
             _database.Items.Update(item);
+            _logger.LogInformation("Updating item.");
             await _database.SaveChangesAsync();
         }
 

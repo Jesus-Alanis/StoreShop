@@ -1,3 +1,4 @@
+using Catalog.API.Middlewares;
 using Catalog.Infra.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
@@ -28,6 +29,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<CorrelationIdContext>();
 
 app.MapControllers();
 

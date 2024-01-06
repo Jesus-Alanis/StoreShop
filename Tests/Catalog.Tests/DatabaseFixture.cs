@@ -2,6 +2,9 @@
 using Catalog.DataAccess.Repositories;
 using Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 
 namespace Catalog.Tests
 {
@@ -17,8 +20,9 @@ namespace Catalog.Tests
                 .UseInMemoryDatabase("DatabaseTests")
                 .Options;
 
-            CategoryRepository = new CategoryRepository(new CatalogDbContext(contextOptions));
-            ItemRepository = new ItemRepository(new CatalogDbContext(contextOptions));
+            var loggerFactory = new NullLoggerFactory();
+            CategoryRepository = new CategoryRepository(loggerFactory.CreateLogger<CategoryRepository>(), new CatalogDbContext(contextOptions));
+            ItemRepository = new ItemRepository(loggerFactory.CreateLogger<ItemRepository>(), new CatalogDbContext(contextOptions));
         }
 
         public void Dispose()

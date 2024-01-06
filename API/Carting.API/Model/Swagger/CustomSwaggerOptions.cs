@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -26,6 +26,8 @@ namespace Carting.API.Model.Swagger
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
             options.IncludeXmlComments(xmlFilePath);
+
+            options.OperationFilter<AddCorrelationHeaderParameter>();
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

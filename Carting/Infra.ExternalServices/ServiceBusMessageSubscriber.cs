@@ -1,15 +1,18 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Carting.Domain.ExternalServices;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Carting.Infra.ExternalServices
 {
     internal class ServiceBusMessageSubscriber : IMessageSubscriber
     {
+        private readonly ILogger<ServiceBusMessageSubscriber> _logger;
         private ServiceBusProcessor? _processor;
 
-        public ServiceBusMessageSubscriber(ServiceBusProcessor processor)
+        public ServiceBusMessageSubscriber(ILogger<ServiceBusMessageSubscriber> logger,  ServiceBusProcessor processor)
         {
+            _logger = logger;
             _processor = processor;
         }
 
@@ -21,36 +24,44 @@ namespace Carting.Infra.ExternalServices
             if (messageDelegate is null)
                 throw new ArgumentNullException(nameof(messageDelegate));
 
+            _logger.LogInformation("Subscribing message delegate");
             _processor.ProcessMessageAsync += async (args) =>
             {
-                try
+                using (_logger.BeginScope(new Dictionary<string, object> {
+                    [nameof(args.Message.CorrelationId)] = args.Message.CorrelationId
+                }))
                 {
-                    var obj = args.Message.Body.ToObjectFromJson<T>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true });
-
-                    var success = messageDelegate.Invoke(obj);
-
-                    if (success)
+                    try
                     {
-                        await args.CompleteMessageAsync(args.Message);
+                        _logger.LogInformation("Received message");
+
+                        var obj = args.Message.Body.ToObjectFromJson<T>(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, PropertyNameCaseInsensitive = true });
+
+                        var success = messageDelegate.Invoke(obj);
+
+                        if (success)
+                        {
+                            _logger.LogInformation("Completing message");
+                            await args.CompleteMessageAsync(args.Message);
+                        }
+                        else
+                        {
+                            _logger.LogInformation("Abandoning message");
+                            //negative ack, try to process the message again
+                            await args.AbandonMessageAsync(args.Message);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        //TODO: log errors somewhere
-                        //negative ack, try to process the message again
+                        _logger.LogError(ex, "Unexpected error while processing message");
                         await args.AbandonMessageAsync(args.Message);
                     }
-                }
-                catch (Exception ex)
-                {
-                    //TODO: log errors somewhere
-                    await args.AbandonMessageAsync(args.Message);
                 }
             };
 
             _processor.ProcessErrorAsync += (args) =>
             {
-                //TODO: log errors somewhere
-
+                _logger.LogError(args.Exception, "Unhandled exception while the message subscriber is running");
                 return Task.CompletedTask;
             };
 

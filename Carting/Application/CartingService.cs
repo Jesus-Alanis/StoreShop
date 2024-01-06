@@ -14,29 +14,27 @@ namespace Carting.Application
         }
 
         public DTOs.Cart GetCart(string cartId)
-        {
+        {            
             var items = _cartRepository.GetItems(cartId);
             return new DTOs.Cart(cartId, items.Select(i => i.ToDto()));
         }
 
-        public DTOs.Item GetItem(string cartId, long itemId)
+        public DTOs.Item? GetItem(string cartId, long itemId)
         {
-            var item = _cartRepository.GetItem(cartId, itemId);
-            return item.ToDto();
+            var item = _cartRepository.GetItem(cartId, itemId);     
+            return item?.ToDto();
         }
 
         public long AddItem(string cartId, DTOs.Item dto)
         {
-            var item = dto.ToEntity(cartId);
+            var item = dto.ToEntity(cartId);           
             return _cartRepository.Addtem(item);
         }
 
         public bool RemoveItem(string cartId, long itemId)
         {
-            if (!_cartRepository.Exists(cartId, itemId))
-                throw new ItemNotFoundException(itemId);
+            var item = _cartRepository.GetItem(cartId, itemId) ?? throw new ItemNotFoundException(itemId);
 
-            var item = _cartRepository.GetItem(cartId, itemId);
             return _cartRepository.RemoveItem(item.Id);
         }
     }
