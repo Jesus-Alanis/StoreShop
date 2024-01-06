@@ -22,33 +22,30 @@ namespace Carting.gRPC.Services
         [RequiredScope("manager.read, buyer.read")]
         public override Task<CartResponse> GetItemsUnaryCall(Cart request, ServerCallContext context)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(Cart.CartId)] = request.CartId
-            }))
-            {
-                return Task.FromResult(GetCart(request.CartId));
-            }               
+            });
+
+            return Task.FromResult(GetCart(request.CartId));
         }
 
         [RequiredScope("manager.read, buyer.read")]
         public async override Task GetItemsServerStreaming(Cart request, IServerStreamWriter<Item> responseStream, ServerCallContext context)
         {
-            using (_logger.BeginScope(new Dictionary<string, object>
+            using var disp = _logger.BeginScope(new Dictionary<string, object>
             {
                 [nameof(Cart.CartId)] = request.CartId
-            }))
+            });
+
+            var items = _cartRepository.GetItems(request.CartId);
+
+            foreach (var item in items)
             {
-                var items = _cartRepository.GetItems(request.CartId);
+                if (context.CancellationToken.IsCancellationRequested)
+                    return;
 
-                foreach (var item in items)
-                {
-                    if (context.CancellationToken.IsCancellationRequested)
-                        return;
-
-                    await responseStream.WriteAsync(item.ToDto());
-                }
-
+                await responseStream.WriteAsync(item.ToDto());
             }
         }
 
@@ -63,14 +60,13 @@ namespace Carting.gRPC.Services
 
                 cartId = request.CartId;
 
-                using (_logger.BeginScope(new Dictionary<string, object>
+                using var disp = _logger.BeginScope(new Dictionary<string, object>
                 {
                     [nameof(ItemRequest.CartId)] = cartId,
                     ["item"] = JsonSerializer.Serialize(request.Item)
-                }))
-                {
-                    AddItem(request.CartId, request.Item);
-                }
+                });
+
+                AddItem(request.CartId, request.Item);
             }
 
             return GetCart(cartId);
@@ -84,15 +80,14 @@ namespace Carting.gRPC.Services
                 if (request == null)
                     continue;
 
-                using (_logger.BeginScope(new Dictionary<string, object>
+                using var disp = _logger.BeginScope(new Dictionary<string, object>
                 {
                     [nameof(ItemRequest.CartId)] = request.CartId,
                     ["item"] = JsonSerializer.Serialize(request.Item)
-                }))
-                {
-                    AddItem(request.CartId, request.Item);
-                    await responseStream.WriteAsync(GetCart(request.CartId));
-                }                 
+                });
+
+                AddItem(request.CartId, request.Item);
+                await responseStream.WriteAsync(GetCart(request.CartId));
             }
         }
 
